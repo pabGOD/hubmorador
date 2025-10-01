@@ -1,0 +1,186 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+:host {
+  display: block;
+  height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  overflow: hidden;
+}
+
+.login-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 15px;
+  box-sizing: border-box;
+  background-image: url('/login-background.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.login-card {
+  background-color: white;
+  padding: 40px 50px;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 480px;
+  text-align: left;
+}
+
+.progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+.step {
+  display: flex;
+  align-items: center;
+  color: #ccc;
+  transition: all 0.4s ease;
+}
+.step.active {
+  color: #007bff;
+}
+.step-number {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  transition: all 0.4s ease;
+}
+.step.active .step-number {
+  border-color: #007bff;
+  background-color: #007bff;
+  color: white;
+}
+.step-label {
+  margin-left: 10px;
+  font-weight: 500;
+}
+.step-connector {
+  flex-grow: 1;
+  height: 2px;
+  background-color: #ccc;
+  margin: 0 15px;
+}
+
+.login-header h1 {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.login-header p {
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  position: relative; /* Adicionado para posicionar a mensagem de erro */
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #555;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.form-actions-multi-step {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.btn {
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  border: 1px solid transparent;
+  transition: all 0.3s ease-out;
+}
+
+/* Estilo para o botão quando está desativado */
+.btn:disabled {
+  background-color: #a0cffa;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #0056b3;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
+}
+
+.btn-secondary {
+  background-color: white;
+  color: #333;
+  border: 1px solid #ccc;
+  text-decoration: none;
+  text-align: center;
+}
+
+.btn-secondary:hover {
+  background-color: #f8f9fa;
+  border-color: #888;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* --- ESTILOS PARA AS MENSAGENS DE ERRO --- */
+
+.error-message {
+  color: #dc3545; /* Vermelho */
+  font-size: 13px;
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+/* Estilo para a borda do input quando está inválido E foi tocado */
+input.ng-invalid.ng-touched {
+  border-color: #dc3545;
+}
+

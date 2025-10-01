@@ -1,0 +1,56 @@
+<div class="login-container">
+  <div class="welcome-section">
+    <h1 class="text-focus-in">
+      Bem-vindo ao<br />
+      Condomínio <span>Sua Comunidade Online</span>
+    </h1>
+    <p>
+      Este é o seu portal completo para todas as informações do condomínio.
+      Encontre avisos importantes, faça reservas de áreas comuns e mantenha-se
+      conectado com a sua comunidade.
+    </p>
+  </div>
+
+  <div class="login-card">
+    <div class="login-header">
+      <h1>HubMorador</h1>
+      <p>Bem-vindo de volta! Faça login para continuar.</p>
+    </div>
+
+    <!-- O formulário agora está conectado ao 'loginForm' e à função 'onSubmit' -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email ou Nº do Apartamento</label>
+        <!-- Cada campo é conectado com 'formControlName' -->
+        <input type="text" id="email" placeholder="seuemail@exemplo.com" formControlName="email" />
+        <!-- Mensagem de erro que aparece se o campo for inválido e tocado -->
+        <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-message">
+          Por favor, insira um email válido.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <input type="password" id="password" placeholder="••••••••" formControlName="password" />
+        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-message">
+          A senha é obrigatória.
+        </div>
+      </div>
+
+      <div class="form-options">
+        <div class="remember-me">
+          <input type="checkbox" id="remember" />
+          <label for="remember">Lembrar de mim</label>
+        </div>
+        <a href="#">Esqueceu a senha?</a>
+      </div>
+
+      <div class="form-actions">
+        <!-- O botão 'Entrar' é do tipo 'submit' e é desativado se o formulário for inválido -->
+        <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">Entrar</button>
+        <a routerLink="/cadastro" class="btn btn-secondary">Cadastrar-se</a>
+      </div>
+    </form>
+  </div>
+</div>
+

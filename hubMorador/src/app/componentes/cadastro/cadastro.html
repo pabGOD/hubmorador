@@ -1,0 +1,77 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="progress-bar">
+      <div class="step" [class.active]="currentStep >= 1">
+        <div class="step-number">1</div>
+        <div class="step-label">Identificação</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step" [class.active]="currentStep === 2">
+        <div class="step-number">2</div>
+        <div class="step-label">Segurança</div>
+      </div>
+    </div>
+
+    <div class="login-header">
+      <h1>Crie a sua Conta</h1>
+      <p>É rápido e fácil. Comece a usar o HubMorador.</p>
+    </div>
+
+    <!-- ETAPA 1: Conectada ao step1Form -->
+    <form *ngIf="currentStep === 1" [formGroup]="step1Form">
+      <div class="form-group">
+        <label for="nome">Nome Completo</label>
+        <!-- Conectado ao formControl 'nome' -->
+        <input type="text" id="nome" placeholder="Digite o seu nome completo" formControlName="nome" />
+        <!-- Mensagem de erro que aparece se o campo for inválido -->
+        <div *ngIf="step1Form.get('nome')?.invalid && step1Form.get('nome')?.touched" class="error-message">
+          O nome completo é obrigatório.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="apartamento">Bloco / Nº do Apartamento</label>
+        <input type="text" id="apartamento" placeholder="Ex: Bloco A, Apto 101" formControlName="apartamento" />
+         <div *ngIf="step1Form.get('apartamento')?.invalid && step1Form.get('apartamento')?.touched" class="error-message">
+          Esta informação é obrigatória.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="seuemail@exemplo.com" formControlName="email" />
+         <div *ngIf="step1Form.get('email')?.invalid && step1Form.get('email')?.touched" class="error-message">
+          Por favor, insira um email válido.
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <!-- O botão é desativado se o formulário for inválido -->
+        <button type="button" class="btn btn-primary" (click)="nextStep()" [disabled]="step1Form.invalid">Avançar</button>
+        <a routerLink="/login" class="btn btn-secondary">Já tenho uma conta</a>
+      </div>
+    </form>
+
+    <!-- ETAPA 2: Conectada ao step2Form e à função onSubmit -->
+    <form *ngIf="currentStep === 2" [formGroup]="step2Form" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <input type="password" id="password" placeholder="Mínimo 6 caracteres" formControlName="password" />
+        <div *ngIf="step2Form.get('password')?.invalid && step2Form.get('password')?.touched" class="error-message">
+          A senha deve ter no mínimo 6 caracteres.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirmar Senha</label>
+        <input type="password" id="confirmPassword" placeholder="Repita a sua senha" formControlName="confirmPassword" />
+      </div>
+
+       <div class="form-actions-multi-step">
+        <button type="button" class="btn btn-secondary" (click)="prevStep()">Voltar</button>
+        <button type="submit" class="btn btn-primary" [disabled]="step2Form.invalid">Cadastrar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
