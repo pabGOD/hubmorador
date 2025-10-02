@@ -1,12 +1,16 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
+// 1. Importar o NavbarComponent para que este ficheiro o conheça.
+import { NavbarComponent } from './componentes/navbar/navbar';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  // 2. Adicionar o NavbarComponent aqui.
+  imports: [CommonModule, RouterOutlet, NavbarComponent], 
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrls: ['./app.css']
 })
-export class App {
-  protected readonly title = signal('hubMorador');
-}
+export class AppComponent {}
+
