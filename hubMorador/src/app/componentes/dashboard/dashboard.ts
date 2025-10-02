@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NavbarComponent } from '../navbar/navbar';
@@ -10,15 +10,51 @@ import { NavbarComponent } from '../navbar/navbar';
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css']
 })
-export class DashboardComponent {
-  
-  // As imagens foram substituídas por links de alta qualidade
+export class DashboardComponent implements OnInit {
+
+  // 1. Adicionámos mais detalhes a cada local
   locais = [
-    { nome: 'Piscina', imagem: 'https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg', rota: '/piscina' },
-    { nome: 'Salão de Festas', imagem: 'https://images.pexels.com/photos/271639/pexels-photo-271639.jpeg', rota: '/salao-de-festas' },
-    { nome: 'Salão de Jogos', imagem: 'https://images.pexels.com/photos/1365425/pexels-photo-1365425.jpeg', rota: '/salao-de-jogos' },
-    { nome: 'Sala de Cinema', imagem: 'https://images.pexels.com/photos/7991579/pexels-photo-7991579.jpeg', rota: '/sala-de-cinema' }
+    { 
+      nome: 'Piscina', 
+      id: 'piscina',
+      icone: 'https://image.flaticon.com/icons/png/512/135/135221.png',
+      descricao: 'Relaxe e aproveite o sol de Salvador na nossa piscina. Ideal para toda a família, com áreas para adultos e crianças.',
+      rota: '/piscina' 
+    },
+    { 
+      nome: 'Salão de Festas', 
+      id: 'salao-festas',
+      icone: 'https://image.flaticon.com/icons/png/512/3048/3048325.png',
+      descricao: 'O espaço perfeito para as suas celebrações. Equipado com tudo o que precisa para aniversários, reuniões e eventos especiais.',
+      rota: '/salao-de-festas' 
+    },
+    { 
+      nome: 'Salão de Jogos', 
+      id: 'salao-jogos',
+      icone: 'https://image.flaticon.com/icons/png/512/893/893128.png',
+      descricao: 'Diversão garantida com mesas de bilhar, matraquilhos e muito mais. Um ótimo lugar para socializar com os vizinhos.',
+      rota: '/salao-de-jogos' 
+    },
+    { 
+      nome: 'Sala de Cinema', 
+      id: 'sala-cinema',
+      icone: 'https://image.flaticon.com/icons/png/512/2798/2798007.png',
+      descricao: 'Assista aos seus filmes e séries favoritos numa tela grande com som de cinema. Perfeito para uma noite diferente.',
+      rota: '/sala-de-cinema' 
+    }
   ];
 
+  // 2. Variável para guardar o local que está selecionado
+  selectedLocal: any;
+
+  // 3. ngOnInit é executado quando o componente começa. Selecionamos o primeiro item da lista.
+  ngOnInit() {
+    this.selectedLocal = this.locais[0];
+  }
+
+  // 4. Função para trocar o local selecionado quando clicamos num item do menu
+  selectLocal(local: any) {
+    this.selectedLocal = local;
+  }
 }
 
