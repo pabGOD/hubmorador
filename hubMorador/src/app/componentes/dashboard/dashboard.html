@@ -1,7 +1,7 @@
 <app-navbar></app-navbar>
 
+<!-- CENA INTERATIVA (Visível apenas em computadores) -->
 <div class="scene">
-  <!-- ZONA ESQUERDA: O MENU -->
   <div class="left-zone">
     <ul class="menu-list">
       <li 
@@ -18,15 +18,31 @@
 
   <div class="middle-border"></div>
 
-  <!-- ZONA DIREITA: O CONTEÚDO -->
   <div class="right-zone">
-    <!-- O conteúdo aqui muda dinamicamente -->
     <div class="content" [ngClass]="selectedLocal.id" *ngIf="selectedLocal">
       <div class="picto" [style.background-image]="'url(' + selectedLocal.icone + ')'"></div>
       <h1>{{ selectedLocal.nome }}</h1>
       <p>{{ selectedLocal.descricao }}</p>
       <a [routerLink]="selectedLocal.rota" class="btn btn-primary">Ver Agenda e Reservar</a>
     </div>
+  </div>
+</div>
+
+<!-- GRELHA DE CARDS (Visível apenas em telemóveis e tablets) -->
+<div class="mobile-locais-view">
+  <header class="mobile-header">
+    <h1>HubMorador</h1>
+    <p>Explore e agende os espaços do seu condomínio.</p>
+  </header>
+  <div class="mobile-locais-grid">
+    <a class="mobile-local-card" *ngFor="let local of locais" [routerLink]="local.rota">
+      <div class="mobile-card-icon" [style.background-image]="'url(' + local.icone + ')'"></div>
+      <div class="mobile-card-body">
+        <h5>{{local.nome}}</h5>
+        <p>{{local.descricao.substring(0, 50)}}...</p> <!-- Mostra uma pequena parte da descrição -->
+      </div>
+      <div class="mobile-card-arrow">›</div>
+    </a>
   </div>
 </div>
 

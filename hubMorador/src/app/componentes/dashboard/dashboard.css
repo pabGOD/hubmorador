@@ -5,14 +5,16 @@
   font-family: 'Poppins', sans-serif;
   background-color: #f4f7f6;
   width: 100%;
-  height: calc(100vh - 56px); /* Altura da tela menos a navbar (ajuste se a sua navbar tiver outra altura) */
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   user-select: none;
+  box-sizing: border-box;
 }
 
-/* O container principal, a "cena" */
+/* --- ESTILOS PARA COMPUTADOR (ECRÃS GRANDES) --- */
+
 .scene {
   display: flex;
   width: 90%;
@@ -24,129 +26,116 @@
   overflow: hidden;
 }
 
-/* Menu à esquerda */
-.left-zone {
-  width: 300px;
-  padding: 2rem 0;
-  display: flex;
-  align-items: center;
-}
-
-.menu-list {
-  list-style: none;
-  width: 100%;
-  padding: 0;
-  margin: 0;
-}
-
-.item {
-  display: flex;
-  align-items: center;
-  padding: 1rem 2rem;
-  opacity: 0.6;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border-right: 4px solid transparent;
-}
-
-.item:hover {
-  opacity: 1;
-  background-color: #f9f9f9;
-}
-
-.item.active {
-  opacity: 1;
-  font-weight: 700;
-}
-
-/* Cores específicas para cada item ativo */
+.left-zone { width: 300px; padding: 2rem 0; display: flex; align-items: center; }
+.menu-list { list-style: none; width: 100%; padding: 0; margin: 0; }
+.item { display: flex; align-items: center; padding: 1rem 2rem; opacity: 0.6; cursor: pointer; transition: all 0.3s ease; border-right: 4px solid transparent; }
+.item:hover { opacity: 1; background-color: #f9f9f9; }
+.item.active { opacity: 1; font-weight: 700; }
 .item.active.piscina { border-color: #3498db; color: #3498db; }
 .item.active.salao-festas { border-color: #e74c3c; color: #e74c3c; }
 .item.active.salao-jogos { border-color: #2ecc71; color: #2ecc71; }
 .item.active.sala-cinema { border-color: #9b59b6; color: #9b59b6; }
-
-.item-icon {
-  width: 40px;
-  height: 40px;
-  margin-right: 15px;
-  background-size: 80%;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-/* Divisor vertical */
-.middle-border {
-  width: 1px;
-  height: 80%;
-  background-color: #e0e0e0;
-  align-self: center;
-}
-
-/* Área de conteúdo à direita */
-.right-zone {
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 2rem;
-  animation: fadeIn 0.5s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.picto {
-  width: 100px;
-  height: 100px;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  margin-bottom: 1.5rem;
-}
-
-.content h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-}
-
-/* Cores específicas para cada título */
+.item-icon { width: 40px; height: 40px; margin-right: 15px; background-size: 80%; background-position: center; background-repeat: no-repeat; }
+.middle-border { width: 1px; height: 80%; background-color: #e0e0e0; align-self: center; }
+.right-zone { flex-grow: 1; display: flex; align-items: center; justify-content: center; }
+.content { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; animation: fadeIn 0.5s ease-in-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.picto { width: 100px; height: 100px; background-size: contain; background-position: center; background-repeat: no-repeat; margin-bottom: 1.5rem; }
+.content h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; }
 .piscina h1 { color: #3498db; }
 .salao-festas h1 { color: #e74c3c; }
 .salao-jogos h1 { color: #2ecc71; }
 .sala-cinema h1 { color: #9b59b6; }
+.content p { max-width: 80%; color: #555; line-height: 1.7; margin-bottom: 2rem; }
+.btn-primary { background-color: #333; color: white; border: none; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: 500; transition: all 0.3s ease; }
+.btn-primary:hover { background-color: #555; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); }
 
-.content p {
-  max-width: 80%;
-  color: #555;
-  line-height: 1.7;
+/* --- ESTILOS PARA TELEMÓVEIS E TABLETS (ECRÃS PEQUENOS) --- */
+.mobile-locais-view {
+  display: none; /* Começa escondido */
+  width: 100%;
+  padding: 1.5rem 1rem;
+}
+
+.mobile-header {
+  text-align: center;
   margin-bottom: 2rem;
 }
+.mobile-header h1 { font-weight: 700; color: #2c3e50; }
+.mobile-header p { color: #7f8c8d; }
 
-.btn-primary {
-  background-color: #333;
-  color: white;
-  border: none;
-  padding: 12px 25px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 500;
-  transition: all 0.3s ease;
+.mobile-locais-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.btn-primary:hover {
-  background-color: #555;
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+.mobile-local-card {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mobile-local-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.mobile-card-icon {
+  width: 50px;
+  height: 50px;
+  background-size: 70%;
+  background-position: center;
+  background-repeat: no-repeat;
+  flex-shrink: 0;
+  margin-right: 1rem;
+  background-color: #f4f7f6;
+  border-radius: 8px;
+}
+
+.mobile-card-body {
+  flex-grow: 1;
+}
+
+.mobile-card-body h5 {
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+  color: #2c3e50;
+}
+
+.mobile-card-body p {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  margin: 0;
+}
+
+.mobile-card-arrow {
+  font-size: 1.5rem;
+  color: #ccc;
+}
+
+
+/* --- RESPONSIVIDADE (A "MAGIA") --- */
+
+/* Para ecrãs de computador, mostra a .scene e esconde a .mobile-locais-view */
+@media (min-width: 992px) {
+  .scene { display: flex; }
+  .mobile-locais-view { display: none; }
+}
+
+/* Para telemóveis e tablets, esconde a .scene e mostra a .mobile-locais-view */
+@media (max-width: 991px) {
+  :host {
+    align-items: flex-start; /* Alinha o conteúdo ao topo em ecrãs pequenos */
+  }
+  .scene { display: none; }
+  .mobile-locais-view { display: block; }
 }
 
