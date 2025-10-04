@@ -1,0 +1,21 @@
+<app-navbar></app-navbar>
+
+<div class="page-container">
+  <header class="page-header">
+    <h1>Agendar Áreas Comuns</h1>
+    <p>Selecione uma área abaixo para ver a disponibilidade e fazer a sua reserva.</p>
+  </header>
+
+  <div class="areas-grid">
+    <a class="area-card" *ngFor="let local of locais" [routerLink]="local.rota">
+      <div class="card-icon" [style.background-color]="local.cor">
+        <img [src]="local.icone" alt="">
+      </div>
+      <div class="card-content">
+        <h3>{{ local.nome }}</h3>
+        <p>{{ local.descricao }}</p>
+      </div>
+      <div class="card-arrow">›</div>
+    </a>
+  </div>
+</div>

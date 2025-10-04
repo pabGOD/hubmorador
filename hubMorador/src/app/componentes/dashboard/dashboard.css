@@ -92,6 +92,36 @@
 .agendamento-data { font-size: 0.9rem; color: #555; margin: 0; }
 .ver-todos-link { text-align: right; font-weight: 500; color: #3498db; text-decoration: none; display: block; margin-top: 1rem; }
 
+/* --- BOTÃO DE AGENDAMENTO --- */
+.agendar-button-container {
+  max-width: 900px;
+  margin: 1.5rem auto;
+  text-align: center;
+}
+
+.btn-agendar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 14px 28px;
+  background: #3498db;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border-radius: 10px;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+}
+
+.btn-agendar:hover {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  transform: translateY(-3px);
+}
+
+
+
 /* RODAPÉ */
 .main-footer { text-align: center; padding: 1.5rem; border-top: 1px solid rgba(224, 224, 224, 0.5); font-size: 0.9rem; color: #555; }
 

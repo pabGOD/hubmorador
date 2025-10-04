@@ -10,6 +10,8 @@ import { SalaoDeJogosComponent } from './componentes/salao-de-jogos/salao-de-jog
 import { SalaDeCinemaComponent } from './componentes/sala-de-cinema/sala-de-cinema';
 import { MeusAgendamentosComponent } from './componentes/meus-agendamentos/meus-agendamentos';
 import { QuadraFutebolComponent } from './componentes/quadra-futebol/quadra-futebol';
+// 1. Importar o novo componente de agendamentos
+import { AgendamentosComponent } from './componentes/agendamentos/agendamentos';
 
 export const routes: Routes = [
   // Rota Inicial
@@ -27,6 +29,8 @@ export const routes: Routes = [
   { path: 'sala-de-cinema', component: SalaDeCinemaComponent },
   { path: 'quadra-futebol', component: QuadraFutebolComponent },
   { path: 'meus-agendamentos', component: MeusAgendamentosComponent },
+  // 2. Adicionar a nova rota para a página de agendamentos
+  { path: 'agendamentos', component: AgendamentosComponent },
 
   // Rota "Coringa" para rotas inexistentes
   { path: '**', redirectTo: 'login' }

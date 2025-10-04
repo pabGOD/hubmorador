@@ -10,12 +10,23 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./navbar.css']
 })
 export class NavbarComponent {
-  // Variável para controlar se o menu está aberto ou fechado
+  // Variável para a sidebar em ecrãs grandes
   isSidebarOpen = false;
+  // Variável para o botão flutuante em ecrãs pequenos
+  isFabMenuOpen = false;
 
-  // Função para abrir/fechar o menu
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
+  }
+
+  toggleFabMenu() {
+    this.isFabMenuOpen = !this.isFabMenuOpen;
+  }
+
+  // Função para fechar qualquer menu que esteja aberto ao navegar
+  closeMenus() {
+    this.isSidebarOpen = false;
+    this.isFabMenuOpen = false;
   }
 }
 

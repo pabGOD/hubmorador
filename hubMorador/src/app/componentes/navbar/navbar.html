@@ -11,7 +11,6 @@
   <!-- A sidebar que desliza -->
   <aside class="sidebar">
     <div class="sidebar-header">
-      <!-- Ícone SVG substituído para garantir a visibilidade -->
       <svg class="header-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
       <h3>HubMorador</h3>
     </div>
@@ -19,6 +18,11 @@
       <li>
         <a class="nav-link" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="toggleSidebar()">
           Painel Principal
+        </a>
+      </li>
+      <li>
+        <a class="nav-link" routerLink="/agendamentos" routerLinkActive="active" (click)="toggleSidebar()">
+          Agendar Áreas
         </a>
       </li>
       <li>
