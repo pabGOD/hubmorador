@@ -17,9 +17,8 @@
   box-sizing: border-box;
 }
 
-/* --- ESTILO "VIDRO FOSCO" --- */
+/* --- ESTILO "VIDRO FOSCO" (usado no header e footer) --- */
 .main-header,
-.info-widget,
 .main-footer,
 .notification-panel {
   background-color: rgba(255, 255, 255, 0.7) !important;
@@ -42,19 +41,10 @@
 .weather-widget .weather-icon { font-size: 1.5rem; }
 .user-profile img { width: 40px; height: 40px; border-radius: 50%; }
 
-/* --- PAINEL DE NOTIFICAÇÕES (RESTAURADO E RESPONSIVO) --- */
+/* PAINEL DE NOTIFICAÇÕES */
 .notifications { position: relative; cursor: pointer; color: #333; }
 .notification-badge { position: absolute; top: -5px; right: -8px; background-color: #e74c3c; color: white; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; border: 2px solid #f4f7f6; }
-.notification-panel {
-  position: absolute;
-  top: 150%;
-  right: 0;
-  width: 350px;
-  border-radius: 12px;
-  z-index: 100;
-  overflow: hidden;
-  animation: fadeInPanel 0.3s ease;
-}
+.notification-panel { position: absolute; top: 150%; right: 0; width: 350px; border-radius: 12px; z-index: 100; overflow: hidden; animation: fadeInPanel 0.3s ease; }
 @keyframes fadeInPanel { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 .panel-header { padding: 1rem; border-bottom: 1px solid rgba(0,0,0,0.1); }
 .panel-header h4 { margin: 0; font-size: 1.1rem; font-weight: 700; color: #2c3e50; }
@@ -68,8 +58,97 @@
 .no-notifications { padding: 2rem 1rem; text-align: center; color: #999; }
 
 /* CONTEÚDO PRINCIPAL */
-.main-content { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; padding: 2rem; }
-.carousel-container { position: relative; height: 450px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); overflow: hidden; }
+.main-content { display: flex; flex-direction: column; gap: 2rem; padding: 2rem; }
+
+/* --- SEÇÃO QUADRO DE AVISOS --- */
+.notice-board-section {
+  background-color: #f5f5f5; /* Um fundo cinza claro para destacar */
+  border-radius: 8px;
+  padding: 1.5rem 2rem;
+  border: 1px solid #e0e0e0;
+  width: 100%;
+}
+
+.notice-board-title {
+  font-family: 'Poppins', sans-serif; /* Usando a fonte principal para o título */
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+  color: #444;
+  margin: 0 0 1.5rem 0;
+}
+
+/* Container dos widgets dentro do quadro de avisos */
+.info-widgets-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  width: 100%;
+}
+
+/* --- ESTILO "PAPEL PREGADO" PARA OS WIDGETS --- */
+.info-widget {
+  padding: 1.5rem;
+  border-radius: 4px; 
+  background-color: #FFFFE0; /* Cor de papel amarelado */
+  border: 1px solid #DADADA !important;
+  box-shadow: 3px 3px 8px rgba(0,0,0,0.15) !important;
+  transition: transform 0.2s ease;
+  position: relative; /* Necessário para a "tachinha" */
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* O "pulo do gato" para o estilo amador */
+.info-widgets-container .info-widget:nth-child(1) {
+  transform: rotate(-2deg); /* Inclina o primeiro card para a esquerda */
+}
+.info-widgets-container .info-widget:nth-child(2) {
+  transform: rotate(1.5deg); /* Inclina o segundo para a direita */
+}
+.info-widget:hover {
+  transform: rotate(0deg) scale(1.02); /* Ao passar o mouse, ele fica reto e um pouco maior */
+}
+
+/* Adicionando uma "tachinha" falsa com CSS */
+.info-widget::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 18px;
+  background-color: #e74c3c; /* Vermelho da tachinha */
+  border-radius: 50%;
+  border: 2px solid #c0392b;
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+}
+
+.info-widget h4 {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #333;
+  margin: 1rem 0 1.5rem 0;
+  border-bottom: 1px dashed #aaa;
+  padding-bottom: 0.5rem;
+  text-align: center;
+}
+
+.aviso-item { display: flex; gap: 1rem; align-items: baseline; margin-bottom: 0.8rem; font-size: 0.9rem; border-bottom: 1px dotted #ccc; padding-bottom: 0.5rem; }
+.aviso-item:last-child { border-bottom: none; }
+.aviso-data { font-weight: 700; color: #c0392b; font-family: 'Courier New', Courier, monospace; }
+.aviso-titulo { color: #555; }
+
+.agendamento-item { border-left: none; padding-left: 0; margin-bottom: 1rem; list-style-type: none; }
+.agendamento-item::before { content: '■'; color: #3498db; margin-right: 0.75rem; font-weight: bold; }
+.agendamento-titulo { font-weight: 700; margin: 0; display: inline; }
+.agendamento-data { font-size: 0.9rem; color: #555; margin: 0; display: block; padding-left: 1.5rem; }
+.ver-todos-link { text-align: right; font-weight: 500; color: #2980b9; text-decoration: underline; display: block; margin-top: 1.5rem; font-style: italic; }
+
+/* --- CARROSSEL --- */
+.carousel-container { position: relative; height: 450px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); overflow: hidden; width: 100%; }
 .carousel-wrapper { display: flex; width: 100%; height: 100%; scroll-behavior: smooth; scroll-snap-type: x mandatory; overflow-x: scroll; -ms-overflow-style: none; scrollbar-width: none; }
 .carousel-wrapper::-webkit-scrollbar { display: none; }
 .carousel-slide { flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: start; position: relative; }
@@ -81,56 +160,49 @@
 .carousel-prev:hover, .carousel-next:hover { background-color: rgba(0, 0, 0, 0.8); }
 .carousel-prev { left: 1rem; }
 .carousel-next { right: 1rem; }
-.info-sidebar { display: flex; flex-direction: column; gap: 2rem; }
-.info-widget { padding: 1.5rem; border-radius: 12px; }
-.info-widget h4 { font-size: 1.2rem; font-weight: 700; color: #34495e; margin: 0 0 1rem 0; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 1rem; }
-.aviso-item { display: flex; gap: 1rem; align-items: baseline; margin-bottom: 0.8rem; font-size: 0.9rem; }
-.aviso-data { font-weight: 700; color: #3498db; }
-.aviso-titulo { color: #555; }
-.agendamento-item { border-left: 3px solid #3498db; padding-left: 1rem; margin-bottom: 1rem; }
-.agendamento-titulo { font-weight: 700; margin: 0; }
-.agendamento-data { font-size: 0.9rem; color: #555; margin: 0; }
-.ver-todos-link { text-align: right; font-weight: 500; color: #3498db; text-decoration: none; display: block; margin-top: 1rem; }
 
 /* --- BOTÃO DE AGENDAMENTO --- */
-.agendar-button-container {
-  max-width: 900px;
-  margin: 1.5rem auto;
-  text-align: center;
-}
-
-.btn-agendar {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  padding: 14px 28px;
-  background: #3498db;
-  color: #fff;
-  font-weight: 600;
-  font-size: 1.1rem;
-  border-radius: 10px;
-  text-decoration: none;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  transition: all 0.3s ease;
-}
-
-.btn-agendar:hover {
-  background: linear-gradient(135deg, #3498db, #2980b9);
-  transform: translateY(-3px);
-}
-
-
+.agendar-button-container { max-width: 900px; margin: 1.5rem auto; text-align: center; }
+.btn-agendar { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 14px 28px; background: #3498db; color: #fff; font-weight: 600; font-size: 1.1rem; border-radius: 10px; text-decoration: none; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: all 0.3s ease; }
+.btn-agendar:hover { background: linear-gradient(135deg, #3498db, #2980b9); transform: translateY(-3px); }
 
 /* RODAPÉ */
 .main-footer { text-align: center; padding: 1.5rem; border-top: 1px solid rgba(224, 224, 224, 0.5); font-size: 0.9rem; color: #555; }
 
-/* RESPONSIVIDADE */
-@media (max-width: 1200px) { .main-content { grid-template-columns: 1fr; } }
+/* --- ESTILOS PARA A SEÇÃO DE LOCAIS POPULARES --- */
+.popular-places { padding: 2rem 0; margin-top: 1rem; }
+.section-title { font-size: 1.8rem; font-weight: 700; color: #2c3e50; margin-bottom: 1.5rem; text-align: left; }
+.places-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+.place-card { background-color: #fff; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; }
+.place-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.12); }
+.place-card img { width: 100%; height: 180px; object-fit: cover; display: block; }
+.card-content { padding: 1rem; }
+.card-content h3 { font-size: 1.1rem; font-weight: 700; margin: 0 0 0.25rem 0; color: #34495e; }
+.card-content p { font-size: 0.9rem; color: #7f8c8d; margin: 0; }
+
+/* --- RESPONSIVIDADE GERAL --- */
+@media (max-width: 992px) {
+  .places-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 820px) {
+  .info-widgets-container { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 768px) {
   .page-wrapper { padding-left: 0; padding-top: 80px; }
   .main-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
   .header-right { width: 100%; justify-content: space-between; }
   .notification-panel { width: 90vw; max-width: 350px; right: 50%; transform: translateX(50%); }
+  
+  .info-widgets-container .info-widget:nth-child(1),
+  .info-widgets-container .info-widget:nth-child(2) {
+    transform: none; /* Deixa os cards retos no celular para não quebrar o layout */
+  }
+}
+
+@media (max-width: 576px) {
+  .places-grid { grid-template-columns: 1fr; }
+  .section-title { font-size: 1.5rem; text-align: center; }
 }
 

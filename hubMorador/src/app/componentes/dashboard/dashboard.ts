@@ -29,6 +29,29 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   ];
   proximosAgendamentos = [ { local: 'Salão de Festas', data: 'Amanhã, 19:00 - 23:00' } ];
   avisos = [ { titulo: 'Manutenção da Piscina', data: '10/10' }, { titulo: 'Festa de São João', data: '23/06' } ];
+  // COLE A NOVA PROPRIEDADE AQUI
+ locaisPopulares = [
+  {
+   img: 'https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg',
+   titulo: 'Piscina',
+   subtitulo: 'Relaxe e aproveite o sol'
+  },
+  {
+   img: 'https://images.pexels.com/photos/3935328/pexels-photo-3935328.jpeg',
+   titulo: 'Salão de Jogos',
+   subtitulo: 'Diversão para todas as idades'
+  },
+  {
+   img: 'https://images.pexels.com/photos/1954524/pexels-photo-1954524.jpeg',
+   titulo: 'Academia',
+   subtitulo: 'Mantenha-se em forma'
+  },
+  {
+   img: 'https://images.pexels.com/photos/5929283/pexels-photo-5929283.jpeg',
+   titulo: 'Área de Churrasco',
+   subtitulo: 'Perfeito para encontros'
+  }
+ ];
 
 
   // 2. Variável para guardar o nosso temporizador
