@@ -1,13 +1,107 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
+import { NavbarComponent } from '../navbar/navbar';
+import { AgendamentoService, Agendamento } from '../../services/agendamento.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-meus-agendamentos',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule, NavbarComponent],
   templateUrl: './meus-agendamentos.html',
-  styleUrl: './meus-agendamentos.css'
+  styleUrls: ['./meus-agendamentos.css']
 })
-export class MeusAgendamentosComponent {
+export class MeusAgendamentosComponent implements OnInit, OnDestroy {
+  
+  agendamentos: Agendamento[] = [];
+  agendamentosFiltrados: Agendamento[] = [];
+  filtroAtivo: string = 'todos';
+  filtroLocal: string = 'todos';
+  private subscription!: Subscription;
 
+  constructor(
+    private router: Router,
+    private agendamentoService: AgendamentoService
+  ) {}
+
+  ngOnInit(): void {
+    this.subscription = this.agendamentoService.agendamentos$.subscribe(agendamentos => {
+      this.agendamentos = agendamentos;
+      this.aplicarFiltros();
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  get agendamentosAtivos(): Agendamento[] {
+    return this.agendamentos.filter(a => a.status === 'ativo');
+  }
+
+  get agendamentosConcluidos(): Agendamento[] {
+    return this.agendamentos.filter(a => a.status === 'concluido');
+  }
+
+  filtrarAgendamentos(event: any): void {
+    this.filtroAtivo = event.target.value;
+    this.aplicarFiltros();
+  }
+
+  filtrarPorLocal(event: any): void {
+    this.filtroLocal = event.target.value;
+    this.aplicarFiltros();
+  }
+
+  aplicarFiltros(): void {
+    let filtrados = [...this.agendamentos];
+
+    if (this.filtroAtivo !== 'todos') {
+      filtrados = filtrados.filter(agendamento => 
+        agendamento.status === this.filtroAtivo
+      );
+    }
+
+    if (this.filtroLocal !== 'todos') {
+      filtrados = filtrados.filter(agendamento => 
+        agendamento.local.toLowerCase().includes(this.filtroLocal.toLowerCase())
+      );
+    }
+
+    this.agendamentosFiltrados = filtrados;
+  }
+
+  getStatusText(status: string): string {
+    const statusMap: { [key: string]: string } = {
+      'ativo': 'Confirmado',
+      'concluido': 'Concluído',
+      'cancelado': 'Cancelado'
+    };
+    return statusMap[status] || status;
+  }
+
+  cancelarAgendamento(agendamento: Agendamento): void {
+    if (confirm(`Tem certeza que deseja cancelar o agendamento do ${agendamento.local}?`)) {
+      this.agendamentoService.cancelarAgendamento(agendamento.id);
+    }
+  }
+
+  editarAgendamento(agendamento: Agendamento): void {
+    // Navega para a página do local específico para edição
+    const rotas: { [key: string]: string } = {
+      'Piscina': '/piscina',
+      'Salão de Festas': '/salao-de-festas',
+      'Salão de Jogos': '/salao-de-jogos',
+      'Sala de Cinema': '/sala-de-cinema',
+      'Quadra de Futebol': '/quadra-futebol'
+    };
+    
+    const rota = rotas[agendamento.local] || '/agendamentos';
+    this.router.navigate([rota], { 
+      queryParams: { editar: agendamento.id } 
+    });
+  }
 }

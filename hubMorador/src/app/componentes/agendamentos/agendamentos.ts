@@ -44,6 +44,14 @@ export class AgendamentosComponent {
       descricao: 'Uma noite diferente.',
       cor: '#9b59b6',
       rota: '/sala-de-cinema' 
+    },
+    { 
+      nome: 'Quadra de Futebol', 
+      id: 'quadra-futebol',
+      icone: 'https://cdn-icons-png.flaticon.com/512/869/869423.png',
+      descricao: 'Para partidas emocionantes.',
+      cor: '#f39c12',
+      rota: '/quadra-futebol' 
     }
   ];
 }

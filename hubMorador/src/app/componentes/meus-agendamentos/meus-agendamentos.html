@@ -1,1 +1,157 @@
-<p>meus-agendamentos works!</p>
+<app-navbar></app-navbar>
+
+<div class="page-wrapper">
+  <!-- CABEÇALHO -->
+  <header class="main-header">
+    <div class="header-left">
+      <h1 class="app-name">HubMorador</h1>
+      <span class="user-welcome">Meus Agendamentos</span>
+    </div>
+    <div class="header-right">
+      <div class="search-bar">
+        <input type="text" placeholder="Buscar agendamentos...">
+      </div>
+      <div class="weather-widget">
+        <span class="weather-icon">☀️</span>
+        <span>28°C, Salvador</span>
+      </div>
+      
+      <div class="user-profile">
+        <img src="https://i.pravatar.cc/150?u=pablo" alt="Foto de perfil">
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="main-content">
+    
+    <!-- FILTROS E CONTROLES -->
+    <section class="controls-section">
+      <div class="filters-container">
+        <div class="filter-group">
+          <label for="status-filter">Filtrar por:</label>
+          <select id="status-filter" class="filter-select" (change)="filtrarAgendamentos($event)">
+            <option value="todos">Todos os agendamentos</option>
+            <option value="ativo">Próximos</option>
+            <option value="concluido">Concluídos</option>
+            <option value="cancelado">Cancelados</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="local-filter">Local:</label>
+          <select id="local-filter" class="filter-select" (change)="filtrarPorLocal($event)">
+            <option value="todos">Todos os locais</option>
+            <option value="piscina">Piscina</option>
+            <option value="salao-festas">Salão de Festas</option>
+            <option value="salao-jogos">Salão de Jogos</option>
+            <option value="sala-cinema">Sala de Cinema</option>
+            <option value="quadra">Quadra de Futebol</option>
+          </select>
+        </div>
+      </div>
+      
+      <button class="btn-novo-agendamento" routerLink="/agendamentos">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Novo Agendamento
+      </button>
+    </section>
+
+    <!-- ESTATÍSTICAS RÁPIDAS -->
+    <section class="stats-section">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">📅</div>
+          <div class="stat-info">
+            <h3>{{ agendamentos.length }}</h3>
+            <p>Total de Agendamentos</p>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon">⏳</div>
+          <div class="stat-info">
+            <h3>{{ agendamentosAtivos.length }}</h3>
+            <p>Próximos</p>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon">✅</div>
+          <div class="stat-info">
+            <h3>{{ agendamentosConcluidos.length }}</h3>
+            <p>Concluídos</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LISTA DE AGENDAMENTOS -->
+    <section class="agendamentos-section">
+      <h2 class="section-title">Meus Agendamentos</h2>
+      
+      <div class="agendamentos-list">
+        <div *ngFor="let agendamento of agendamentosFiltrados" 
+             class="agendamento-card" 
+             [class.concluido]="agendamento.status === 'concluido'"
+             [class.cancelado]="agendamento.status === 'cancelado'">
+          
+          <div class="agendamento-header">
+            <div class="local-info">
+              <div class="local-icon">
+                <img [src]="agendamento.icone" [alt]="agendamento.local">
+              </div>
+              <div class="local-details">
+                <h3>{{ agendamento.local }}</h3>
+                <span class="agendamento-data">
+                  {{ agendamento.data | date:'fullDate' | titlecase }}, {{ agendamento.horario }}
+                </span>
+              </div>
+            </div>
+            
+            <div class="agendamento-status" [class]="agendamento.status">
+              <span>{{ getStatusText(agendamento.status) }}</span>
+            </div>
+          </div>
+          
+          <!-- SEÇÃO DE DETALHES SIMPLIFICADA - APENAS CÓDIGO -->
+          <div class="agendamento-details">
+            <div class="detail-item">
+              <span class="detail-label">Código:</span>
+              <span class="detail-value">{{ agendamento.codigo }}</span>
+            </div>
+          </div>
+          
+          <!-- AÇÕES - APENAS CANCELAR E ALTERAR -->
+          <div class="agendamento-actions" *ngIf="agendamento.status === 'ativo'">
+            <button class="btn-action btn-cancelar" (click)="cancelarAgendamento(agendamento)">
+              Cancelar
+            </button>
+            <button class="btn-action btn-editar" (click)="editarAgendamento(agendamento)">
+              Alterar
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- MENSAGEM QUANDO NÃO HÁ AGENDAMENTOS -->
+      <div *ngIf="agendamentosFiltrados.length === 0" class="empty-state">
+        <div class="empty-icon">📅</div>
+        <h3>Nenhum agendamento encontrado</h3>
+        <p>Você ainda não possui agendamentos {{ filtroAtivo !== 'todos' ? 'com esse filtro' : '' }}.</p>
+        <button class="btn-novo-agendamento" routerLink="/agendamentos">
+          Fazer Primeiro Agendamento
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- RODAPÉ -->
+  <footer class="main-footer">
+    <p>HubMorador © 2025 | Contato da Portaria: (71) 9999-9999 | Email da Administração: admin@condominio.com</p>
+  </footer>
+</div>

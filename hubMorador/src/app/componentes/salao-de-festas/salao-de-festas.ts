@@ -1,34 +1,40 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../navbar/navbar';
 import { UserService } from '../../services/user.service';
+import { AgendamentoService } from '../../services/agendamento.service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-salao-de-festas',
   standalone: true,
-  imports: [CommonModule, NavbarComponent],
+  imports: [CommonModule, NavbarComponent, FormsModule],
   templateUrl: './salao-de-festas.html',
   styleUrls: ['./salao-de-festas.css']
 })
 export class SalaoDeFestasComponent implements OnInit {
   
   localInfo = {
-    nome: 'Salão de Festas' 
+    nome: 'Salão de Festas',
+    icone: 'https://cdn-icons-png.flaticon.com/512/3222/3222696.png'
   };
   
   mesAtual: Date = new Date();
   diasDoMes: any[] = [];
   selectedDate: Date | null = null;
-  selectedTime: string | null = '19:00 - 23:00'; // Default time
+  selectedTime: string = '19:00 - 23:00';
 
-  // Example bookings for this specific area
   agendamentos = [
     new Date(2025, 9, 5),
     new Date(2025, 9, 25),
   ];
 
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(
+    private userService: UserService, 
+    private agendamentoService: AgendamentoService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.gerarCalendario();
@@ -79,6 +85,15 @@ export class SalaoDeFestasComponent implements OnInit {
 
   confirmarAgendamento() {
     if (this.selectedDate && this.selectedTime) {
+      // ADICIONAR AGENDAMENTO NO SERVIÇO
+      this.agendamentoService.adicionarAgendamento({
+        local: this.localInfo.nome,
+        icone: this.localInfo.icone,
+        data: this.selectedDate,
+        horario: this.selectedTime
+      });
+
+      // Notificação e alerta
       this.userService.addNotification({
         title: 'Reserva Confirmada!',
         message: `A sua reserva para o ${this.localInfo.nome} no dia ${this.selectedDate.toLocaleDateString()} (${this.selectedTime}) foi efetuada.`
@@ -89,4 +104,12 @@ export class SalaoDeFestasComponent implements OnInit {
       this.router.navigate(['/meus-agendamentos']);
     }
   }
+
+  // REMOVA qualquer método chamado 'filterAgendamento' se existir
+  // Ou se precisar de filtro, implemente corretamente:
+  /*
+  filtrarAgendamentos(event: any): void {
+    // Implementação do filtro se necessário
+  }
+  */
 }

@@ -1,1 +1,78 @@
-<p>salao-de-jogos works!</p>
+<app-navbar></app-navbar>
+
+<div class="page-container">
+  <div class="agendamento-card">
+
+    <!-- Coluna da Esquerda: Calendário -->
+    <div class="calendario-container">
+      <div class="calendario-header">
+        <h2>{{ mesAtual | date:'MMMM yyyy' | titlecase }}</h2>
+      </div>
+      <div class="calendario-grid">
+        <div class="dia-semana">Dom</div>
+        <div class="dia-semana">Seg</div>
+        <div class="dia-semana">Ter</div>
+        <div class="dia-semana">Qua</div>
+        <div class="dia-semana">Qui</div>
+        <div class="dia-semana">Sex</div>
+        <div class="dia-semana">Sáb</div>
+
+        <div 
+          *ngFor="let dia of diasDoMes" 
+          class="dia" 
+          [ngClass]="{
+            'outro-mes': dia.isOutroMes, 
+            'hoje': dia.isHoje, 
+            'agendado': dia.isAgendado,
+            'selecionado': dia.data?.getTime() === selectedDate?.getTime()
+          }"
+          (click)="selecionarDia(dia)">
+          {{ dia.dia }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Coluna da Direita: Detalhes e Agendamento -->
+    <div class="detalhes-container">
+      <div class="detalhes-header">
+        <img src="https://cdn-icons-png.flaticon.com/512/2332/2332389.png" alt="Ícone do Salão de Jogos">
+        <h1>Agendar Salão de Jogos</h1>
+        <p>Selecione um dia disponível no calendário e escolha um horário para a sua reserva.</p>
+      </div>
+
+      <div class="info-regras">
+        <h4>Regras de Utilização:</h4>
+        <ul>
+          <li>Horário de funcionamento: 09:00 - 00:00.</li>
+          <li>Máximo de 15 pessoas por reserva.</li>
+          <li>Proibido consumo de alimentos nos equipamentos.</li>
+          <li>Cuidado com os equipamentos e jogos.</li>
+          <li>Devolver todos os jogos ao local original.</li>
+        </ul>
+      </div>
+
+      <div class="agendamento-form">
+        <h4>Sua Seleção:</h4>
+        <p *ngIf="selectedDate" class="data-selecionada">
+          Dia: <strong>{{ selectedDate | date:'fullDate' | titlecase }}</strong>
+        </p>
+        <p *ngIf="!selectedDate" class="data-nao-selecionada">
+          Selecione uma data no calendário.
+        </p>
+
+        <div *ngIf="selectedDate">
+          <label for="horario">Escolha um horário:</label>
+          <select id="horario" class="form-select" #horarioSelect (change)="selectedTime = horarioSelect.value">
+            <option value="09:00 - 12:00">09:00 - 12:00</option>
+            <option value="13:00 - 16:00">13:00 - 16:00</option>
+            <option value="17:00 - 20:00">17:00 - 20:00</option>
+            <option value="20:00 - 22:00" selected>20:00 - 22:00</option>
+          </select>
+
+          <button class="btn-confirmar" (click)="confirmarAgendamento()">Confirmar Agendamento</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
