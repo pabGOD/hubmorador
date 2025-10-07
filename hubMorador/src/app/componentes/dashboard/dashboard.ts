@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef } fr
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { NavbarComponent } from '../navbar/navbar';
+// A interface 'Notification' já vem do serviço, então está tudo certo
 import { UserService, User, Notification } from '../../services/user.service';
 import { Subscription } from 'rxjs';
 
@@ -26,12 +27,11 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     { src: 'https://images.pexels.com/photos/34120676/pexels-photo-34120676.jpeg', alt: 'Quadra de futebol', title: 'Quadra de Futebol', subtitle: 'Quadra novinha em folha! A reforma está concluída. Venha se divertir!' }
   ];
   
-  // --- NOVA LISTA PARA OS LOCAIS POPULARES ---
   locaisPopulares = [
     { nome: 'Piscina', descricao: 'Relaxe e aproveite o sol', imagem: 'https://images.pexels.com/photos/1147124/pexels-photo-1147124.jpeg', rota: '/piscina' },
     { nome: 'Salão de Jogos', descricao: 'Diversão para todas as idades', imagem: 'https://images.pexels.com/photos/16074/pexels-photo.jpg', rota: '/salao-de-jogos' },
-    { nome: 'Quadra de Futebol', descricao: 'Mantenha-se em forma', imagem: 'https://images.pexels.com/photos/9765649/pexels-photo-9765649.jpeg', rota: '/agendamentos' }, // Rota de exemplo
-    { nome: 'Salão de Festas', descricao: 'Perfeito para encontros', imagem: 'https://images.pexels.com/photos/8153964/pexels-photo-8153964.jpeg', rota: '/agendamentos' } // Rota de exemplo
+    { nome: 'Quadra de Futebol', descricao: 'Mantenha-se em forma', imagem: 'https://images.pexels.com/photos/9765649/pexels-photo-9765649.jpeg', rota: '/agendamentos' },
+    { nome: 'Salão de Festas', descricao: 'Perfeito para encontros', imagem: 'https://images.pexels.com/photos/8153964/pexels-photo-8153964.jpeg', rota: '/agendamentos' }
   ];
 
   proximosAgendamentos = [ { local: 'Salão de Festas', data: 'Amanhã, 19:00 - 23:00' } ];
@@ -64,12 +64,10 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  // 🔔 MÉTODOS DO SINO (ÚNICA MODIFICAÇÃO)
   toggleNotifications() { 
     this.showNotifications = !this.showNotifications;
   }
 
-  // Fechar notificações ao clicar fora
   onDocumentClick(event: Event) {
     const target = event.target as HTMLElement;
     if (!target.closest('.notifications')) {
@@ -77,19 +75,16 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  // Clique em uma notificação específica
   handleNotificationClick(notification: Notification, index: number, event: Event) {
     event.stopPropagation();
     
-    // Marcar como lida se não estiver lida
     if (!notification.read) {
+      // Esta função será corrigida no próximo passo (ver explicação abaixo)
       this.markNotificationAsRead(index);
     }
 
-    // Navegar baseado no conteúdo da notificação
     this.navigateBasedOnNotification(notification);
     
-    // Fechar o painel
     this.showNotifications = false;
   }
 
@@ -100,42 +95,24 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  // --- ALTERAÇÃO PRINCIPAL: LÓGICA DE NAVEGAÇÃO SIMPLIFICADA ---
   private navigateBasedOnNotification(notification: Notification) {
-    const title = notification.title.toLowerCase();
-    const message = notification.message.toLowerCase();
-
-    // Lógica de navegação inteligente
-    if (title.includes('agendamento') || message.includes('agendamento')) {
-      this.router.navigate(['/meus-agendamentos']);
-    } 
-    else if (title.includes('piscina') || message.includes('piscina')) {
-      this.router.navigate(['/piscina']);
-    }
-    else if (title.includes('salão') || title.includes('salao') || message.includes('salão') || message.includes('salao')) {
-      this.router.navigate(['/salao-de-festas']);
-    }
-    else if (title.includes('quadra') || message.includes('quadra') || message.includes('futebol')) {
-      this.router.navigate(['/quadra-futebol']);
-    }
-    else if (title.includes('cinema') || message.includes('cinema')) {
-      this.router.navigate(['/sala-de-cinema']);
-    }
-    else if (title.includes('jogos') || message.includes('jogos')) {
-      this.router.navigate(['/salao-de-jogos']);
-    }
-    else {
-      // Padrão: vai para meus agendamentos
+    // Se a notificação tiver uma rota definida, navegue para ela.
+    if (notification.route) {
+      this.router.navigate([notification.route]);
+    } else {
+      // Se não tiver, vai para uma rota padrão.
+      // Isso garante que o app não quebre com notificações antigas.
+      console.warn('Notificação sem rota definida. Usando rota padrão.');
       this.router.navigate(['/meus-agendamentos']);
     }
   }
 
-  // Marcar todas as notificações como lidas
   markAllAsRead(event: Event) {
     event.stopPropagation();
     this.userService.markAllAsRead();
   }
 
-  // Seus métodos existentes (SEM ALTERAÇÕES)...
   startAutoSlide(): void {
     this.autoSlideInterval = setInterval(() => {
       this.scrollToSlide('next');

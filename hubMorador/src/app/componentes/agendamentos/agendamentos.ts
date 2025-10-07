@@ -16,7 +16,7 @@ export class AgendamentosComponent {
     { 
       nome: 'Piscina', 
       id: 'piscina',
-      icone: 'https://cdn-icons-png.flaticon.com/512/309/309403.png',
+      icone: 'https://img.icons8.com/?size=100&id=XH3AddzHs6tY&format=png&color=000000',
       descricao: 'Ideal para toda a família.',
       cor: '#3498db',
       rota: '/piscina' 
@@ -24,17 +24,17 @@ export class AgendamentosComponent {
     { 
       nome: 'Salão de Festas', 
       id: 'salao-festas',
-      icone: 'https://cdn-icons-png.flaticon.com/512/603/603123.png',
+      icone: 'https://img.icons8.com/?size=100&id=PEmFcgjhBgKF&format=png&color=000000',
       descricao: 'Perfeito para celebrações.',
-      cor: '#e74c3c',
+      cor: '#cee91fff',
       rota: '/salao-de-festas' 
     },
     { 
       nome: 'Salão de Jogos', 
       id: 'salao-jogos',
-      icone: 'https://cdn-icons-png.flaticon.com/512/1048/1048958.png',
+      icone: 'https://img.icons8.com/?size=100&id=V1Ja402KSwyz&format=png&color=000000',
       descricao: 'Diversão garantida.',
-      cor: '#2ecc71',
+      cor: '#d22916bc',
       rota: '/salao-de-jogos' 
     },
     { 
@@ -48,9 +48,9 @@ export class AgendamentosComponent {
     { 
       nome: 'Quadra de Futebol', 
       id: 'quadra-futebol',
-      icone: 'https://cdn-icons-png.flaticon.com/512/869/869423.png',
+      icone: 'https://img.icons8.com/?size=100&id=96VqabWovcJm&format=png&color=000000',
       descricao: 'Para partidas emocionantes.',
-      cor: '#f39c12',
+      cor: '#6fb53dff',
       rota: '/quadra-futebol' 
     }
   ];
