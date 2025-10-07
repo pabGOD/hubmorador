@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-// Importando todos os seus componentes com os caminhos corretos (sem .component)
+// Importando todos os seus componentes com os caminhos corretos
 import { LoginComponent } from './componentes/login/login';
 import { CadastroComponent } from './componentes/cadastro/cadastro';
 import { DashboardComponent } from './componentes/dashboard/dashboard';
@@ -10,8 +10,9 @@ import { SalaoDeJogosComponent } from './componentes/salao-de-jogos/salao-de-jog
 import { SalaDeCinemaComponent } from './componentes/sala-de-cinema/sala-de-cinema';
 import { MeusAgendamentosComponent } from './componentes/meus-agendamentos/meus-agendamentos';
 import { QuadraFutebolComponent } from './componentes/quadra-futebol/quadra-futebol';
-// 1. Importar o novo componente de agendamentos
 import { AgendamentosComponent } from './componentes/agendamentos/agendamentos';
+// CORREÇÃO: Importar com o nome correto da classe
+import { PoliticaPrivacidadeComponent } from './componentes/politica-privacidade/politica-privacidade';
 
 export const routes: Routes = [
   // Rota Inicial
@@ -29,10 +30,9 @@ export const routes: Routes = [
   { path: 'sala-de-cinema', component: SalaDeCinemaComponent },
   { path: 'quadra-futebol', component: QuadraFutebolComponent },
   { path: 'meus-agendamentos', component: MeusAgendamentosComponent },
-  // 2. Adicionar a nova rota para a página de agendamentos
   { path: 'agendamentos', component: AgendamentosComponent },
+  { path: 'politica-privacidade', component: PoliticaPrivacidadeComponent },
 
   // Rota "Coringa" para rotas inexistentes
   { path: '**', redirectTo: 'login' }
 ];
-

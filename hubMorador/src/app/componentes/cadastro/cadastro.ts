@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-// 1. Importar o nosso novo UserService
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -17,7 +16,6 @@ export class CadastroComponent implements OnInit {
   step1Form!: FormGroup;
   step2Form!: FormGroup;
 
-  // 2. Injetar o UserService no construtor, para além dos outros
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -28,12 +26,25 @@ export class CadastroComponent implements OnInit {
     this.step1Form = this.fb.group({
         nome: ['', Validators.required],
         apartamento: ['', Validators.required],
-        email: ['', [Validators.required, Validators.email]]
+        email: ['', [Validators.required, Validators.email]],
+        lgpd: [false, Validators.requiredTrue] // NOVO CAMPO LGPD
     });
+    
     this.step2Form = this.fb.group({
         password: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', Validators.required]
-    });
+    }, { validators: this.passwordMatchValidator });
+  }
+
+  // Validador personalizado para confirmar senha
+  passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
+    const password = control.get('password');
+    const confirmPassword = control.get('confirmPassword');
+    
+    if (password && confirmPassword && password.value !== confirmPassword.value) {
+      return { passwordMismatch: true };
+    }
+    return null;
   }
 
   nextStep() {
@@ -49,17 +60,20 @@ export class CadastroComponent implements OnInit {
   }
 
   onSubmit() {
-    // 3. Garantir que ambos os formulários são válidos antes de continuar
     if (this.step1Form.valid && this.step2Form.valid) {
-      // 4. Chamar a função 'login' do serviço, passando o nome do novo utilizador
+      // Incluir a aceitação da LGPD nos dados do usuário
+      const userData = {
+        ...this.step1Form.value,
+        ...this.step2Form.value,
+        lgpdAccepted: true,
+        lgpdAcceptedAt: new Date().toISOString()
+      };
+      
       this.userService.login({ nome: this.step1Form.value.nome });
-      // 5. Navegar para o dashboard
       this.router.navigate(['/dashboard']);
     } else {
-      // Se algum formulário for inválido, marca todos os campos para mostrar os erros
       this.step1Form.markAllAsTouched();
       this.step2Form.markAllAsTouched();
     }
   }
 }
-

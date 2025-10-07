@@ -108,6 +108,116 @@
 .info-widget:hover {
   transform: rotate(0deg) scale(1.02); 
 }
+/* SINO */
+/* ESTILOS ESPECÍFICOS PARA O SINO DE NOTIFICAÇÕES */
+.notifications {
+  position: relative;
+  cursor: pointer;
+  color: #333;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.notifications:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.notifications i {
+  font-size: 1.5rem;
+  color: #ffffff;
+}
+
+.notification-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background-color: #e74c3c;
+  color: white;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  border: 2px solid #3498db;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.mark-all-read {
+  background: none;
+  border: none;
+  color: #3498db;
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  margin-top: 5px;
+}
+
+.mark-all-read:hover {
+  color: #2980b9;
+}
+
+/* Melhorias para os itens de notificação */
+.notification-item {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.notification-item.unread {
+  background-color: rgba(52, 152, 219, 0.1);
+  border-left: 4px solid #3498db;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item:hover {
+  background-color: rgba(52, 152, 219, 0.15);
+  transform: translateX(5px);
+}
+
+.notification-item h5 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+  color: #2c3e50;
+}
+
+.notification-item p {
+  font-size: 0.85rem;
+  margin: 0;
+  color: #555;
+  line-height: 1.4;
+}
+
+.notification-item .time {
+  font-size: 0.75rem;
+  color: #7f8c8d;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+.no-notifications {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #7f8c8d;
+  font-style: italic;
+}
 
 /* Adicionando uma "tachinha" falsa com CSS */
 .info-widget::before {
@@ -169,7 +279,7 @@
 .main-footer { text-align: center; padding: 1.5rem; border-top: 1px solid rgba(224, 224, 224, 0.5); font-size: 0.9rem; color: #555; }
 
 /* --- ESTILOS PARA A SEÇÃO DE LOCAIS POPULARES --- */
-.popular-places { padding: 2rem 0; margin-top: 1rem; }
+.popular-places { padding: 2rem 0; margin-top: 1rem;  }
 .section-title { font-size: 1.8rem; font-weight: 700; color: #2c3e50; margin-bottom: 1.5rem; text-align: left; }
 .places-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
 .place-card { background-color: #fff; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; }

@@ -21,9 +21,7 @@
     <form *ngIf="currentStep === 1" [formGroup]="step1Form">
       <div class="form-group">
         <label for="nome">Nome Completo</label>
-        <!-- Conectado ao formControl 'nome' -->
         <input type="text" id="nome" placeholder="Digite o seu nome completo" formControlName="nome" />
-        <!-- Mensagem de erro que aparece se o campo for inválido -->
         <div *ngIf="step1Form.get('nome')?.invalid && step1Form.get('nome')?.touched" class="error-message">
           O nome completo é obrigatório.
         </div>
@@ -45,8 +43,29 @@
         </div>
       </div>
 
+      <!-- NOVO CAMPO LGPD CORRIGIDO -->
+      <div class="form-group lgpd-container">
+        <div class="lgpd-checkbox">
+          <input 
+            type="checkbox" 
+            id="lgpd" 
+            formControlName="lgpd"
+            class="lgpd-input"
+          />
+          <label for="lgpd" class="lgpd-label">
+            Concordo com os 
+            <a [routerLink]="['/politica-privacidade']" target="_blank" class="lgpd-link">
+              termos de uso e política de privacidade
+            </a>
+            , e autorizo o tratamento dos meus dados pessoais de acordo com a LGPD.
+          </label>
+        </div>
+        <div *ngIf="step1Form.get('lgpd')?.invalid && step1Form.get('lgpd')?.touched" class="error-message">
+          Você deve aceitar os termos e a política de privacidade para continuar.
+        </div>
+      </div>
+
       <div class="form-actions">
-        <!-- O botão é desativado se o formulário for inválido -->
         <button type="button" class="btn btn-primary" (click)="nextStep()" [disabled]="step1Form.invalid">Avançar</button>
         <a routerLink="/login" class="btn btn-secondary">Já tenho uma conta</a>
       </div>
@@ -74,4 +93,3 @@
     </form>
   </div>
 </div>
-

@@ -12,11 +12,9 @@ import { Subscription } from 'rxjs';
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css']
 })
-// 1. Adicionamos a interface 'AfterViewInit'
 export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('carouselWrapper') carouselWrapper!: ElementRef;
 
-  // ... (propriedades existentes) ...
   userInfo: User | null = null;
   notifications: Notification[] = [];
   unreadNotificationsCount = 0;
@@ -25,36 +23,20 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   carouselImages = [
     { src: 'https://images.pexels.com/photos/7234313/pexels-photo-7234313.jpeg', alt: 'Sala de cinema moderna', title: 'Sala de cinema', subtitle: 'Espaços pensados para o seu bem-estar.' },
     { src: 'https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg', alt: 'Piscina do condomínio', title: 'Área da Piscina', subtitle: 'Grande inauguração da nova hidromassagem!' },
-    { src: 'https://images.pexels.com/photos/34120676/pexels-photo-34120676.jpeg', alt: 'Quarto de apartamento', title: 'Quadra de Futebol', subtitle: 'Quadra novinha em folha! A reforma está concluída. Venha se divertir!' }
+    { src: 'https://images.pexels.com/photos/34120676/pexels-photo-34120676.jpeg', alt: 'Quadra de futebol', title: 'Quadra de Futebol', subtitle: 'Quadra novinha em folha! A reforma está concluída. Venha se divertir!' }
   ];
+  
+  // --- NOVA LISTA PARA OS LOCAIS POPULARES ---
+  locaisPopulares = [
+    { nome: 'Piscina', descricao: 'Relaxe e aproveite o sol', imagem: 'https://images.pexels.com/photos/1671650/pexels-photo-1671650.jpeg', rota: '/piscina' },
+    { nome: 'Salão de Jogos', descricao: 'Diversão para todas as idades', imagem: 'https://images.pexels.com/photos/411207/pexels-photo-411207.jpeg', rota: '/salao-de-jogos' },
+    { nome: 'Academia', descricao: 'Mantenha-se em forma', imagem: 'https://images.pexels.com/photos/1954524/pexels-photo-1954524.jpeg', rota: '/agendamentos' }, // Rota de exemplo
+    { nome: 'Área de Churrasco', descricao: 'Perfeito para encontros', imagem: 'https://images.pexels.com/photos/6207818/pexels-photo-6207818.jpeg', rota: '/agendamentos' } // Rota de exemplo
+  ];
+
   proximosAgendamentos = [ { local: 'Salão de Festas', data: 'Amanhã, 19:00 - 23:00' } ];
   avisos = [ { titulo: 'Manutenção da Piscina', data: '10/10' }, { titulo: 'Festa de São João', data: '23/06' } ];
-  // COLE A NOVA PROPRIEDADE AQUI
- locaisPopulares = [
-  {
-   img: 'https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg',
-   titulo: 'Piscina',
-   subtitulo: 'Relaxe e aproveite o sol'
-  },
-  {
-   img: 'https://images.pexels.com/photos/3935328/pexels-photo-3935328.jpeg',
-   titulo: 'Salão de Jogos',
-   subtitulo: 'Diversão para todas as idades'
-  },
-  {
-   img: 'https://images.pexels.com/photos/1954524/pexels-photo-1954524.jpeg',
-   titulo: 'Academia',
-   subtitulo: 'Mantenha-se em forma'
-  },
-  {
-   img: 'https://images.pexels.com/photos/5929283/pexels-photo-5929283.jpeg',
-   titulo: 'Área de Churrasco',
-   subtitulo: 'Perfeito para encontros'
-  }
- ];
 
-
-  // 2. Variável para guardar o nosso temporizador
   private autoSlideInterval: any;
 
   constructor(private userService: UserService, private router: Router) {}
@@ -71,14 +53,12 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  // 3. ngAfterViewInit é executado depois de o HTML estar pronto. É o sítio perfeito para iniciar o nosso temporizador.
   ngAfterViewInit(): void {
     this.startAutoSlide();
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
-    // 4. É MUITO IMPORTANTE limpar o temporizador quando saímos da página para evitar problemas de memória.
     if (this.autoSlideInterval) {
       clearInterval(this.autoSlideInterval);
     }
@@ -93,15 +73,13 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  // 5. Função que inicia o temporizador para passar os slides
   startAutoSlide(): void {
     this.autoSlideInterval = setInterval(() => {
       this.scrollToSlide('next');
-    }, 5000); // Passa para o próximo slide a cada 5 segundos (5000 ms)
+    }, 5000);
   }
 
   scrollToSlide(direction: 'prev' | 'next') {
-    // ... (função scrollToSlide continua igual) ...
     const element = this.carouselWrapper.nativeElement;
     const slideWidth = element.clientWidth;
     const currentScroll = element.scrollLeft;
