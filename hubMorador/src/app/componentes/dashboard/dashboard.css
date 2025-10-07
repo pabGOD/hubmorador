@@ -1,5 +1,5 @@
 /* Importando uma fonte para uma aparência mais moderna */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap' );
 
 :host {
   font-family: 'Poppins', sans-serif;
@@ -278,20 +278,82 @@
 /* RODAPÉ */
 .main-footer { text-align: center; padding: 1.5rem; border-top: 1px solid rgba(224, 224, 224, 0.5); font-size: 0.9rem; color: #555; }
 
-/* --- ESTILOS PARA A SEÇÃO DE LOCAIS POPULARES --- */
-.popular-places { padding: 2rem 0; margin-top: 1rem;  }
-.section-title { font-size: 1.8rem; font-weight: 700; color: #2c3e50; margin-bottom: 1.5rem; text-align: left; }
-.places-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
-.place-card { background-color: #fff; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; }
-.place-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.12); }
-.place-card img { width: 100%; height: 180px; object-fit: cover; display: block; }
-.card-content { padding: 1rem; }
-.card-content h3 { font-size: 1.1rem; font-weight: 700; margin: 0 0 0.25rem 0; color: #34495e; }
-.card-content p { font-size: 0.9rem; color: #7f8c8d; margin: 0; }
+/* --- ESTILOS CORRIGIDOS PARA A SEÇÃO DE LOCAIS POPULARES --- */
+.locais-populares-section {
+  width: 100%;
+  margin-top: 2rem; /* Adiciona um espaço acima da seção */
+}
+
+/* Estilo para o título "Locais Populares" */
+.locais-populares-section h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2c3e50; /* Cor mais escura para melhor contraste */
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #3498db; /* Linha azul para destaque */
+  display: inline-block; /* Faz a borda ficar apenas no tamanho do texto */
+}
+
+.locais-populares-grid {
+  display: grid;
+  /* Cria colunas responsivas: 4 em telas grandes, 2 em tablets e 1 em celulares */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem; /* Espaçamento entre os cards */
+}
+
+/* Seletor corrigido para corresponder à classe do HTML */
+.local-popular-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden; /* Garante que a imagem não ultrapasse as bordas arredondadas */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.local-popular-card:hover {
+  transform: translateY(-8px); /* Efeito de elevação mais pronunciado */
+  box-shadow: 0 10px 25px rgba(41, 128, 185, 0.2); /* Sombra azulada ao passar o mouse */
+}
+
+/* Estilo para a imagem dentro do card */
+.local-popular-card img {
+  width: 100%;
+  height: 180px; /* Altura fixa para todas as imagens */
+  object-fit: cover; /* Garante que a imagem cubra o espaço sem distorcer */
+  display: block;
+}
+
+/* Seletor corrigido para o container de informações */
+.local-popular-info {
+  padding: 1.25rem;
+  flex-grow: 1; /* Faz esta área crescer para ocupar o espaço disponível */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Estilo para o título do local */
+.local-popular-info h5 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  color: #34495e;
+}
+
+/* Estilo para a descrição do local */
+.local-popular-info p {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  margin: 0;
+  line-height: 1.5; /* Melhora a legibilidade */
+}
 
 /* --- RESPONSIVIDADE GERAL --- */
 @media (max-width: 992px) {
-  .places-grid { grid-template-columns: repeat(2, 1fr); }
+  .locais-populares-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 820px) {
@@ -311,7 +373,6 @@
 }
 
 @media (max-width: 576px) {
-  .places-grid { grid-template-columns: 1fr; }
+  .locais-populares-grid { grid-template-columns: 1fr; }
   .section-title { font-size: 1.5rem; text-align: center; }
 }
-

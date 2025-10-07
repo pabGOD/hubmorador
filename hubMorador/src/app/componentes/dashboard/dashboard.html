@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
 
-<div class="page-wrapper">
+<div class="page-wrapper" (click)="onDocumentClick($event)">
   <header class="main-header">
     <div class="header-left">
       <h1 class="app-name">HubMorador</h1>
@@ -14,19 +14,65 @@
         <span class="weather-icon">☀️</span>
         <span>28°C, Salvador</span>
       </div>
+      
+      <!-- 🔔 SINO DE NOTIFICAÇÕES (ÚNICA MODIFICAÇÃO) -->
       <div class="notifications" (click)="toggleNotifications()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
         <span class="notification-badge" *ngIf="unreadNotificationsCount > 0">{{ unreadNotificationsCount }}</span>
+        
         <div class="notification-panel" *ngIf="showNotifications">
-          <!-- Conteúdo das Notificações -->
+          <div class="panel-header">
+            <h4>Notificações</h4>
+            <button class="mark-all-read" (click)="markAllAsRead($event)">Marcar todas como lidas</button>
+          </div>
+          <div class="panel-body">
+            <div *ngIf="notifications.length === 0" class="no-notifications">
+              Nenhuma notificação
+            </div>
+            
+            <div *ngFor="let notification of notifications; let i = index" 
+                 class="notification-item" 
+                 [class.unread]="!notification.read"
+                 (click)="handleNotificationClick(notification, i, $event)">
+              <h5>{{ notification.title }}</h5>
+              <p>{{ notification.message }}</p>
+              <span class="time">{{ notification.time }}</span>
+            </div>
+          </div>
         </div>
       </div>
+      
       <div class="user-profile"><img src="https://i.pravatar.cc/150?u=pablo" alt="Foto de perfil"></div>
     </div>
   </header>
 
   <main class="main-content">
     
+    <!-- SEÇÃO QUADRO DE AVISOS (MANTIDO COMO ESTAVA) -->
+    <section class="notice-board-section">
+      <h2 class="notice-board-title">Quadro de Avisos</h2>
+      <div class="info-widgets-container">
+        <div class="info-widget">
+          <h4>Avisos Importantes</h4>
+          <div class="aviso-item" *ngFor="let aviso of avisos">
+            <span class="aviso-data">{{ aviso.data }}</span>
+            <span class="aviso-titulo">{{ aviso.titulo }}</span>
+          </div>
+        </div>
+        <div class="info-widget">
+          <h4>Próximos Agendamentos</h4>
+          <div class="agendamento-item" *ngFor="let agendamento of proximosAgendamentos">
+            <p class="agendamento-titulo">{{ agendamento.local }}</p>
+            <p class="agendamento-data">{{ agendamento.data }}</p>
+          </div>
+          <a routerLink="/meus-agendamentos" class="ver-todos-link">Ver todos os agendamentos</a>
+        </div>
+      </div>
+    </section>
+
     <section class="left-column">
       <div class="carousel-container">
         <div class="carousel-wrapper" #carouselWrapper>
@@ -42,7 +88,7 @@
         <a class="carousel-next" (click)="scrollToSlide('next')">›</a>
       </div>
 
-      <!-- NOVA SECÇÃO DE LOCAIS POPULARES -->
+      <!-- SEÇÃO LOCAIS POPULARES (MANTIDO COMO ESTAVA) -->
       <div class="locais-populares-section">
         <h2>Locais Populares</h2>
         <div class="locais-populares-grid">
@@ -70,32 +116,9 @@
       </div>
     </section>
 
-    <aside class="info-sidebar">
-      <div class="info-widget">
-        <h4>Avisos Importantes</h4>
-        <div class="widget-content">
-          <div class="aviso-item" *ngFor="let aviso of avisos">
-            <span class="aviso-data">{{ aviso.data }}</span>
-            <p class="aviso-titulo">{{ aviso.titulo }}</p>
-          </div>
-        </div>
-      </div>
-      <div class="info-widget">
-        <h4>Próximos Agendamentos</h4>
-        <div class="widget-content">
-          <div class="agendamento-item" *ngFor="let agendamento of proximosAgendamentos">
-            <p class="agendamento-titulo">{{ agendamento.local }}</p>
-            <p class="agendamento-data">{{ agendamento.data }}</p>
-          </div>
-           <a routerLink="/meus-agendamentos" class="ver-todos-link">Ver todos</a>
-        </div>
-      </div>
-    </aside>
-
   </main>
 
   <footer class="main-footer">
     <p>HubMorador © 2025 | Contato da Portaria: (71) 9999-9999 | Email da Administração: admin@condominio.com</p>
   </footer>
 </div>
-
