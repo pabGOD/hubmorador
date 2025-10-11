@@ -13,6 +13,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "outputPath": "dist/hubMorador",
             "browser": "src/main.ts",
             "polyfills": [
               "zone.js"
@@ -96,3 +97,4 @@
     "analytics": "d146bc93-b7eb-4b83-94b9-738a2c98904a"
   }
 }
+
