@@ -1,4 +1,14 @@
 {
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/angular",
+      "config": {
+        "outputDirectory": "dist/hubMorador"
+      }
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",
@@ -6,3 +16,4 @@
     }
   ]
 }
+
