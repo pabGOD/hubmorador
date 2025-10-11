@@ -156,7 +156,7 @@
 .mark-all-read {
   background: none;
   border: none;
-  color: #3498db;
+  color: #ffffff;
   font-size: 0.8rem;
   cursor: pointer;
   text-decoration: underline;
@@ -179,7 +179,7 @@
 
 .notification-item.unread {
   background-color: rgba(52, 152, 219, 0.1);
-  border-left: 4px solid #3498db;
+  border-left: 4px solid #ffffff;
 }
 
 .notification-item:last-child {
@@ -201,13 +201,13 @@
 .notification-item p {
   font-size: 0.85rem;
   margin: 0;
-  color: #555;
+  color: #ffffff;
   line-height: 1.4;
 }
 
 .notification-item .time {
   font-size: 0.75rem;
-  color: #7f8c8d;
+  color: #000000;
   margin-top: 0.5rem;
   display: block;
 }

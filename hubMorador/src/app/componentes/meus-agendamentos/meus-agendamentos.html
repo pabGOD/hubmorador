@@ -1,7 +1,6 @@
 <app-navbar></app-navbar>
 
 <div class="page-wrapper">
-  <!-- CABEÇALHO -->
   <header class="main-header">
     <div class="header-left">
       <h1 class="app-name">HubMorador</h1>
@@ -15,17 +14,11 @@
         <span class="weather-icon">☀️</span>
         <span>28°C, Salvador</span>
       </div>
-      
-      <div class="user-profile">
-        <img src="https://i.pravatar.cc/150?u=pablo" alt="Foto de perfil">
-      </div>
     </div>
   </header>
 
-  <!-- CONTEÚDO PRINCIPAL -->
   <main class="main-content">
     
-    <!-- FILTROS E CONTROLES -->
     <section class="controls-section">
       <div class="filters-container">
         <div class="filter-group">
@@ -43,10 +36,10 @@
           <select id="local-filter" class="filter-select" (change)="filtrarPorLocal($event)">
             <option value="todos">Todos os locais</option>
             <option value="piscina">Piscina</option>
-            <option value="salao-festas">Salão de Festas</option>
-            <option value="salao-jogos">Salão de Jogos</option>
-            <option value="sala-cinema">Sala de Cinema</option>
-            <option value="quadra">Quadra de Futebol</option>
+            <option value="salao-de-festas">Salão de Festas</option>
+            <option value="salao-de-jogos">Salão de Jogos</option>
+            <option value="sala-de-cinema">Sala de Cinema</option>
+            <option value="quadra-de-futebol">Quadra de Futebol</option>
           </select>
         </div>
       </div>
@@ -60,7 +53,6 @@
       </button>
     </section>
 
-    <!-- ESTATÍSTICAS RÁPIDAS -->
     <section class="stats-section">
       <div class="stats-grid">
         <div class="stat-card">
@@ -89,7 +81,6 @@
       </div>
     </section>
 
-    <!-- LISTA DE AGENDAMENTOS -->
     <section class="agendamentos-section">
       <h2 class="section-title">Meus Agendamentos</h2>
       
@@ -117,7 +108,6 @@
             </div>
           </div>
           
-          <!-- SEÇÃO DE DETALHES SIMPLIFICADA - APENAS CÓDIGO -->
           <div class="agendamento-details">
             <div class="detail-item">
               <span class="detail-label">Código:</span>
@@ -125,7 +115,6 @@
             </div>
           </div>
           
-          <!-- AÇÕES - APENAS CANCELAR E ALTERAR -->
           <div class="agendamento-actions" *ngIf="agendamento.status === 'ativo'">
             <button class="btn-action btn-cancelar" (click)="cancelarAgendamento(agendamento)">
               Cancelar
@@ -134,10 +123,15 @@
               Alterar
             </button>
           </div>
+
+          <div class="agendamento-actions" *ngIf="agendamento.status === 'concluido' || agendamento.status === 'cancelado'">
+            <button class="btn-action btn-excluir" (click)="excluirAgendamento(agendamento)">
+              Excluir
+            </button>
+          </div>
         </div>
       </div>
       
-      <!-- MENSAGEM QUANDO NÃO HÁ AGENDAMENTOS -->
       <div *ngIf="agendamentosFiltrados.length === 0" class="empty-state">
         <div class="empty-icon">📅</div>
         <h3>Nenhum agendamento encontrado</h3>
@@ -150,7 +144,6 @@
 
   </main>
 
-  <!-- RODAPÉ -->
   <footer class="main-footer">
     <p>HubMorador © 2025 | Contato da Portaria: (71) 9999-9999 | Email da Administração: admin@condominio.com</p>
   </footer>

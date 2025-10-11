@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../navbar/navbar';
 import { UserService } from '../../services/user.service';
-// 1. Importar o Router para podermos navegar no final
 import { Router } from '@angular/router';
+// 1. Importar o serviço de agendamento e o Subscription
+import { AgendamentoService } from '../../services/agendamento.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-piscina',
@@ -12,11 +14,8 @@ import { Router } from '@angular/router';
   templateUrl: './piscina.html',
   styleUrls: ['./piscina.css']
 })
-export class PiscinaComponent implements OnInit {
+export class PiscinaComponent implements OnInit, OnDestroy {
   
-  // --- ALTERAÇÃO PRINCIPAL ---
-  // Agora, toda a informação específica deste local está num único objeto.
-  // Quando copiar este código para o "salao-de-festas.ts", só precisa de mudar aqui!
   localInfo = {
     nome: 'Piscina' 
   };
@@ -26,16 +25,30 @@ export class PiscinaComponent implements OnInit {
   selectedDate: Date | null = null;
   selectedTime: string | null = '10:00 - 12:00';
 
-  agendamentos = [
-    new Date(2025, 9, 10),
-    new Date(2025, 9, 15),
-    new Date(2025, 9, 22),
-  ];
+  // Esta lista agora será preenchida dinamicamente
+  agendamentos: Date[] = [];
+  private subscription: Subscription = new Subscription();
 
-  constructor(private userService: UserService, private router: Router) {}
+  // 2. Injetar o AgendamentoService
+  constructor(
+    private userService: UserService, 
+    private router: Router,
+    private agendamentoService: AgendamentoService
+  ) {}
 
   ngOnInit(): void {
-    this.gerarCalendario();
+    // Busca os agendamentos reais do serviço para popular o calendário
+    this.subscription = this.agendamentoService.agendamentos$.subscribe(agendamentos => {
+      this.agendamentos = agendamentos
+        .filter(ag => ag.local === this.localInfo.nome && ag.status === 'ativo')
+        .map(ag => new Date(ag.data));
+      
+      this.gerarCalendario(); // Gera o calendário com os dias corretos já marcados
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   gerarCalendario() {
@@ -83,17 +96,22 @@ export class PiscinaComponent implements OnInit {
 
   confirmarAgendamento() {
     if (this.selectedDate && this.selectedTime) {
-      // Usamos 'this.localInfo.nome' para que a mensagem seja dinâmica
+      // 3. Criar o objeto para o serviço e chamar o método de adicionar
+      const novoAgendamento = {
+        local: this.localInfo.nome,
+        data: this.selectedDate,
+        horario: this.selectedTime
+        // O serviço adicionará o ícone automaticamente
+      };
+
+      this.agendamentoService.adicionarAgendamento(novoAgendamento);
+
       this.userService.addNotification({
         title: 'Reserva Confirmada!',
         message: `A sua reserva para a ${this.localInfo.nome} no dia ${this.selectedDate.toLocaleDateString()} (${this.selectedTime}) foi efetuada.`
       });
-
-      alert(`Agendamento para a ${this.localInfo.nome} confirmado com sucesso!`);
       
-      // Bónus: Após o agendamento, navegamos para a página "Meus Agendamentos"
       this.router.navigate(['/meus-agendamentos']);
     }
   }
 }
-

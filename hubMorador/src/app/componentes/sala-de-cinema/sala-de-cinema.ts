@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../navbar/navbar';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
+// 1. Importar o serviço e o Subscription
+import { AgendamentoService } from '../../services/agendamento.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-sala-de-cinema',
@@ -11,7 +14,7 @@ import { Router } from '@angular/router';
   templateUrl: './sala-de-cinema.html',
   styleUrls: ['./sala-de-cinema.css']
 })
-export class SalaDeCinemaComponent implements OnInit {
+export class SalaDeCinemaComponent implements OnInit, OnDestroy {
   
   localInfo = {
     nome: 'Sala de Cinema' 
@@ -20,18 +23,32 @@ export class SalaDeCinemaComponent implements OnInit {
   mesAtual: Date = new Date();
   diasDoMes: any[] = [];
   selectedDate: Date | null = null;
-  selectedTime: string | null = '18:00 - 20:00'; // Default time
+  selectedTime: string | null = '18:00 - 20:00';
 
-  // Example bookings for this specific area
-  agendamentos = [
-    new Date(2025, 9, 12),
-    new Date(2025, 9, 18),
-  ];
+  // Esta lista será preenchida dinamicamente
+  agendamentos: Date[] = [];
+  private subscription: Subscription = new Subscription();
 
-  constructor(private userService: UserService, private router: Router) {}
+  // 2. Injetar o AgendamentoService
+  constructor(
+    private userService: UserService, 
+    private router: Router,
+    private agendamentoService: AgendamentoService
+  ) {}
 
   ngOnInit(): void {
-    this.gerarCalendario();
+    // Busca os agendamentos reais para popular o calendário
+    this.subscription = this.agendamentoService.agendamentos$.subscribe(agendamentos => {
+      this.agendamentos = agendamentos
+        .filter(ag => ag.local === this.localInfo.nome && ag.status === 'ativo')
+        .map(ag => new Date(ag.data));
+      
+      this.gerarCalendario(); // Recria o calendário com as datas corretas
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   gerarCalendario() {
@@ -79,12 +96,21 @@ export class SalaDeCinemaComponent implements OnInit {
 
   confirmarAgendamento() {
     if (this.selectedDate && this.selectedTime) {
+      // 3. Criar o objeto e chamar o serviço para salvar
+      const novoAgendamento = {
+        local: this.localInfo.nome,
+        data: this.selectedDate,
+        horario: this.selectedTime
+        // O ícone é adicionado automaticamente pelo serviço
+      };
+
+      this.agendamentoService.adicionarAgendamento(novoAgendamento);
+
+      // A lógica de notificação e navegação permanece a mesma
       this.userService.addNotification({
         title: 'Reserva Confirmada!',
         message: `A sua reserva para a ${this.localInfo.nome} no dia ${this.selectedDate.toLocaleDateString()} (${this.selectedTime}) foi efetuada.`
       });
-
-      alert(`Agendamento para a ${this.localInfo.nome} confirmado com sucesso!`);
       
       this.router.navigate(['/meus-agendamentos']);
     }

@@ -11,56 +11,56 @@ export interface Agendamento {
   codigo: string;
 }
 
+// **** LÓGICA DE ÍCONES CENTRALIZADA AQUI ****
+// Mapeia o nome do local ao link do ícone correspondente.
+const ICONE_POR_LOCAL: { [key: string]: string } = {
+  'Piscina': 'https://img.icons8.com/?size=100&id=XH3AddzHs6tY&format=png&color=000000',
+  'Salão de Festas': 'https://img.icons8.com/?size=100&id=PEmFcgjhBgKF&format=png&color=000000',
+  'Salão de Jogos': 'https://img.icons8.com/?size=100&id=V1Ja402KSwyz&format=png&color=000000',
+  'Sala de Cinema': 'https://cdn-icons-png.flaticon.com/512/2798/2798007.png',
+  'Quadra de Futebol': 'https://img.icons8.com/?size=100&id=96VqabWovcJm&format=png&color=000000'
+};
+
+
 @Injectable({
   providedIn: 'root'
 })
 export class AgendamentoService {
+
   private agendamentosKey = 'hubmorador_agendamentos';
   private agendamentosSubject = new BehaviorSubject<Agendamento[]>(this.carregarAgendamentos());
-  
+
   agendamentos$ = this.agendamentosSubject.asObservable();
 
-  constructor() {}
+  constructor() { }
+
+  // **** NOVO MÉTODO PÚBLICO PARA OBTER ÍCONES ****
+  // Agora outros componentes podem buscar o ícone correto usando este método.
+  public getIconeParaLocal(local: string): string {
+    return ICONE_POR_LOCAL[local] || 'https://img.icons8.com/?size=100&id=7856&format=png&color=000000'; // Ícone padrão
+  }
 
   private carregarAgendamentos(): Agendamento[] {
     if (typeof window !== 'undefined' && window.localStorage) {
       const agendamentosSalvos = localStorage.getItem(this.agendamentosKey);
-      return agendamentosSalvos ? JSON.parse(agendamentosSalvos) : this.getAgendamentosIniciais();
+      if (agendamentosSalvos) {
+        const agendamentos = JSON.parse(agendamentosSalvos);
+        return agendamentos.map((ag: Agendamento) => ({
+          ...ag,
+          data: new Date(ag.data)
+        }));
+      }
+      return this.getAgendamentosIniciais();
     }
     return this.getAgendamentosIniciais();
   }
 
   private getAgendamentosIniciais(): Agendamento[] {
-  return [
-    {
-      id: 1,
-      local: 'Salão de Festas',
-      icone: 'https://cdn-icons-png.flaticon.com/512/3222/3222696.png',
-      data: new Date(2025, 9, 28),
-      horario: '19:00 - 23:00',
-      status: 'ativo',
-      codigo: 'SF-2025-001'
-    },
-    {
-      id: 2,
-      local: 'Piscina',
-      icone: 'https://cdn-icons-png.flaticon.com/512/309/309403.png',
-      data: new Date(2025, 9, 20),
-      horario: '14:00 - 16:00',
-      status: 'concluido',
-      codigo: 'PI-2025-045'
-    },
-    {
-      id: 3,
-      local: 'Sala de Cinema',
-      icone: 'https://cdn-icons-png.flaticon.com/512/3163/3163769.png',
-      data: new Date(2025, 9, 25),
-      horario: '20:00 - 22:00',
-      status: 'ativo',
-      codigo: 'SC-2025-078'
-    }
-  ];
-}
+    return [
+   
+      
+    ];
+  }
 
   private salvarAgendamentos(agendamentos: Agendamento[]): void {
     if (typeof window !== 'undefined' && window.localStorage) {
@@ -69,12 +69,14 @@ export class AgendamentoService {
     this.agendamentosSubject.next(agendamentos);
   }
 
-  adicionarAgendamento(novoAgendamento: Omit<Agendamento, 'id' | 'codigo' | 'status'>): void {
+  adicionarAgendamento(novoAgendamento: Omit<Agendamento, 'id' | 'codigo' | 'status' | 'icone'>): void {
     const agendamentos = this.carregarAgendamentos();
-    
+
     const agendamento: Agendamento = {
       ...novoAgendamento,
       id: this.gerarNovoId(agendamentos),
+      // Atribui o ícone correto automaticamente com base no nome do local
+      icone: this.getIconeParaLocal(novoAgendamento.local), 
       codigo: this.gerarCodigo(novoAgendamento.local),
       status: 'ativo'
     };
@@ -95,11 +97,9 @@ export class AgendamentoService {
       'Sala de Cinema': 'SC',
       'Quadra de Futebol': 'QF'
     };
-
     const prefixo = prefixos[local] || 'AG';
     const numero = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
     const ano = new Date().getFullYear();
-
     return `${prefixo}-${ano}-${numero}`;
   }
 
@@ -110,10 +110,15 @@ export class AgendamentoService {
   cancelarAgendamento(id: number): void {
     const agendamentos = this.carregarAgendamentos();
     const index = agendamentos.findIndex(a => a.id === id);
-    
     if (index !== -1) {
       agendamentos[index].status = 'cancelado';
       this.salvarAgendamentos(agendamentos);
     }
+  }
+
+  excluirAgendamento(id: number): void {
+    const agendamentos = this.carregarAgendamentos();
+    const agendamentosAtualizados = agendamentos.filter(a => a.id !== id);
+    this.salvarAgendamentos(agendamentosAtualizados);
   }
 }

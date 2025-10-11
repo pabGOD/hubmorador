@@ -26,6 +26,8 @@ export class MeusAgendamentosComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // A mágica acontece aqui: ao se inscrever, qualquer mudança no serviço
+    // (adicionar, cancelar, excluir) será refletida aqui automaticamente.
     this.subscription = this.agendamentoService.agendamentos$.subscribe(agendamentos => {
       this.agendamentos = agendamentos;
       this.aplicarFiltros();
@@ -67,7 +69,8 @@ export class MeusAgendamentosComponent implements OnInit, OnDestroy {
 
     if (this.filtroLocal !== 'todos') {
       filtrados = filtrados.filter(agendamento => 
-        agendamento.local.toLowerCase().includes(this.filtroLocal.toLowerCase())
+        // Lógica para corresponder o valor do select ('salao-festas') com o nome do local ('Salão de Festas')
+        agendamento.local.toLowerCase().replace(/\s+/g, '-') === this.filtroLocal.toLowerCase()
       );
     }
 
@@ -90,7 +93,6 @@ export class MeusAgendamentosComponent implements OnInit, OnDestroy {
   }
 
   editarAgendamento(agendamento: Agendamento): void {
-    // Navega para a página do local específico para edição
     const rotas: { [key: string]: string } = {
       'Piscina': '/piscina',
       'Salão de Festas': '/salao-de-festas',
@@ -103,5 +105,17 @@ export class MeusAgendamentosComponent implements OnInit, OnDestroy {
     this.router.navigate([rota], { 
       queryParams: { editar: agendamento.id } 
     });
+  }
+
+  // **** NOVA FUNÇÃO ADICIONADA AQUI ****
+  excluirAgendamento(agendamento: Agendamento): void {
+    // Adicionamos uma confirmação para evitar exclusões acidentais.
+    const confirmacao = confirm(
+      `Tem certeza que deseja EXCLUIR PERMANENTEMENTE o agendamento do local "${agendamento.local}"?\n\nEsta ação não pode ser desfeita.`
+    );
+
+    if (confirmacao) {
+      this.agendamentoService.excluirAgendamento(agendamento.id);
+    }
   }
 }

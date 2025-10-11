@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../navbar/navbar';
 import { UserService } from '../../services/user.service';
 import { AgendamentoService } from '../../services/agendamento.service';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs'; // 1. Importar o Subscription
 
 @Component({
   selector: 'app-salao-de-festas',
@@ -13,11 +14,11 @@ import { Router } from '@angular/router';
   templateUrl: './salao-de-festas.html',
   styleUrls: ['./salao-de-festas.css']
 })
-export class SalaoDeFestasComponent implements OnInit {
+export class SalaoDeFestasComponent implements OnInit, OnDestroy {
   
   localInfo = {
-    nome: 'Salão de Festas',
-    icone: 'https://cdn-icons-png.flaticon.com/512/3222/3222696.png'
+    nome: 'Salão de Festas'
+    // 2. Removemos o 'icone' daqui, pois o serviço já sabe qual é.
   };
   
   mesAtual: Date = new Date();
@@ -25,10 +26,9 @@ export class SalaoDeFestasComponent implements OnInit {
   selectedDate: Date | null = null;
   selectedTime: string = '19:00 - 23:00';
 
-  agendamentos = [
-    new Date(2025, 9, 5),
-    new Date(2025, 9, 25),
-  ];
+  // Esta lista agora será preenchida dinamicamente pelo serviço
+  agendamentos: Date[] = [];
+  private subscription: Subscription = new Subscription();
 
   constructor(
     private userService: UserService, 
@@ -37,7 +37,19 @@ export class SalaoDeFestasComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.gerarCalendario();
+    // Carrega os agendamentos reais do serviço para popular o calendário
+    this.subscription = this.agendamentoService.agendamentos$.subscribe(agendamentos => {
+      this.agendamentos = agendamentos
+        .filter(ag => ag.local === this.localInfo.nome && ag.status === 'ativo')
+        .map(ag => new Date(ag.data));
+      
+      this.gerarCalendario(); // Gera o calendário com os dias corretos já marcados
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Evita vazamento de memória ao sair do componente
+    this.subscription.unsubscribe();
   }
 
   gerarCalendario() {
@@ -85,31 +97,22 @@ export class SalaoDeFestasComponent implements OnInit {
 
   confirmarAgendamento() {
     if (this.selectedDate && this.selectedTime) {
-      // ADICIONAR AGENDAMENTO NO SERVIÇO
-      this.agendamentoService.adicionarAgendamento({
+      // 3. Criamos o objeto sem a propriedade 'icone'
+      const novoAgendamento = {
         local: this.localInfo.nome,
-        icone: this.localInfo.icone,
         data: this.selectedDate,
         horario: this.selectedTime
-      });
+      };
 
-      // Notificação e alerta
+      // O serviço se encarrega de adicionar o ícone correto
+      this.agendamentoService.adicionarAgendamento(novoAgendamento);
+
       this.userService.addNotification({
         title: 'Reserva Confirmada!',
         message: `A sua reserva para o ${this.localInfo.nome} no dia ${this.selectedDate.toLocaleDateString()} (${this.selectedTime}) foi efetuada.`
       });
-
-      alert(`Agendamento para o ${this.localInfo.nome} confirmado com sucesso!`);
       
       this.router.navigate(['/meus-agendamentos']);
     }
   }
-
-  // REMOVA qualquer método chamado 'filterAgendamento' se existir
-  // Ou se precisar de filtro, implemente corretamente:
-  /*
-  filtrarAgendamentos(event: any): void {
-    // Implementação do filtro se necessário
-  }
-  */
 }
