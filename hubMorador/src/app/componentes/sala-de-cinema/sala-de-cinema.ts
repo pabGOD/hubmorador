@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../navbar/navbar';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
-// 1. Importar o serviço e o Subscription
 import { AgendamentoService } from '../../services/agendamento.service';
 import { Subscription } from 'rxjs';
 
@@ -25,11 +24,9 @@ export class SalaDeCinemaComponent implements OnInit, OnDestroy {
   selectedDate: Date | null = null;
   selectedTime: string | null = '18:00 - 20:00';
 
-  // Esta lista será preenchida dinamicamente
   agendamentos: Date[] = [];
   private subscription: Subscription = new Subscription();
 
-  // 2. Injetar o AgendamentoService
   constructor(
     private userService: UserService, 
     private router: Router,
@@ -37,13 +34,12 @@ export class SalaDeCinemaComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Busca os agendamentos reais para popular o calendário
     this.subscription = this.agendamentoService.agendamentos$.subscribe(agendamentos => {
       this.agendamentos = agendamentos
         .filter(ag => ag.local === this.localInfo.nome && ag.status === 'ativo')
         .map(ag => new Date(ag.data));
       
-      this.gerarCalendario(); // Recria o calendário com as datas corretas
+      this.gerarCalendario();
     });
   }
 
@@ -64,11 +60,13 @@ export class SalaDeCinemaComponent implements OnInit, OnDestroy {
 
     for (let i = 1; i <= ultimoDiaDoMes; i++) {
       const data = new Date(ano, mes, i);
+      // **ALTERAÇÃO AQUI**: Adicionamos a verificação se o dia já passou
       this.diasDoMes.push({
         dia: i,
         data: data,
         isHoje: this.isHoje(data),
         isAgendado: this.isAgendado(data),
+        isPassado: this.isPassado(data) // Nova propriedade
       });
     }
   }
@@ -80,6 +78,13 @@ export class SalaDeCinemaComponent implements OnInit, OnDestroy {
            data.getFullYear() === hoje.getFullYear();
   }
 
+  // **NOVO MÉTODO**: Verifica se a data é anterior a hoje
+  isPassado(data: Date): boolean {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0); 
+    return data < hoje;
+  }
+
   isAgendado(data: Date): boolean {
     return this.agendamentos.some(ag => 
       ag.getDate() === data.getDate() &&
@@ -89,24 +94,29 @@ export class SalaDeCinemaComponent implements OnInit, OnDestroy {
   }
 
   selecionarDia(dia: any) {
-    if (dia.dia && !dia.isAgendado) {
+    // **ALTERAÇÃO AQUI**: Impede o clique em dias agendados ou passados
+    if (dia.dia && !dia.isAgendado && !dia.isPassado) {
       this.selectedDate = dia.data;
     }
   }
 
+  // **NOVO MÉTODO**: Para navegar entre os meses
+  mudarMes(offset: number): void {
+    this.mesAtual.setMonth(this.mesAtual.getMonth() + offset);
+    this.mesAtual = new Date(this.mesAtual);
+    this.gerarCalendario();
+  }
+
   confirmarAgendamento() {
     if (this.selectedDate && this.selectedTime) {
-      // 3. Criar o objeto e chamar o serviço para salvar
       const novoAgendamento = {
         local: this.localInfo.nome,
         data: this.selectedDate,
         horario: this.selectedTime
-        // O ícone é adicionado automaticamente pelo serviço
       };
 
       this.agendamentoService.adicionarAgendamento(novoAgendamento);
 
-      // A lógica de notificação e navegação permanece a mesma
       this.userService.addNotification({
         title: 'Reserva Confirmada!',
         message: `A sua reserva para a ${this.localInfo.nome} no dia ${this.selectedDate.toLocaleDateString()} (${this.selectedTime}) foi efetuada.`

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../navbar/navbar';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
-// 1. Importamos o AgendamentoService e o Subscription para o calendário dinâmico
 import { AgendamentoService } from '../../services/agendamento.service';
 import { Subscription } from 'rxjs';
 
@@ -25,11 +24,9 @@ export class SalaoDeJogosComponent implements OnInit, OnDestroy {
   selectedDate: Date | null = null;
   selectedTime: string | null = '20:00 - 22:00';
 
-  // Esta lista agora será preenchida dinamicamente pelo serviço
   agendamentos: Date[] = [];
   private subscription: Subscription = new Subscription();
 
-  // 2. Injetamos o AgendamentoService no construtor
   constructor(
     private userService: UserService, 
     private router: Router,
@@ -37,21 +34,16 @@ export class SalaoDeJogosComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // (BÔNUS) Buscamos os agendamentos reais do serviço para popular o calendário
     this.subscription = this.agendamentoService.agendamentos$.subscribe(agendamentos => {
       this.agendamentos = agendamentos
-        // Filtramos para pegar apenas os agendamentos deste local específico
         .filter(ag => ag.local === this.localInfo.nome && ag.status === 'ativo')
-        // Mapeamos para ter apenas a lista de datas
         .map(ag => new Date(ag.data));
       
-      // Geramos o calendário com os dias já marcados como agendados
       this.gerarCalendario();
     });
   }
 
   ngOnDestroy(): void {
-    // Boa prática para evitar vazamento de memória
     this.subscription.unsubscribe();
   }
 
@@ -68,11 +60,13 @@ export class SalaoDeJogosComponent implements OnInit, OnDestroy {
 
     for (let i = 1; i <= ultimoDiaDoMes; i++) {
       const data = new Date(ano, mes, i);
+      // **ALTERAÇÃO AQUI**: Adicionada a verificação de data passada
       this.diasDoMes.push({
         dia: i,
         data: data,
         isHoje: this.isHoje(data),
         isAgendado: this.isAgendado(data),
+        isPassado: this.isPassado(data) // Nova propriedade
       });
     }
   }
@@ -84,6 +78,13 @@ export class SalaoDeJogosComponent implements OnInit, OnDestroy {
            data.getFullYear() === hoje.getFullYear();
   }
 
+  // **NOVO MÉTODO**: Verifica se a data é anterior a hoje
+  isPassado(data: Date): boolean {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    return data < hoje;
+  }
+
   isAgendado(data: Date): boolean {
     return this.agendamentos.some(ag => 
       ag.getDate() === data.getDate() &&
@@ -93,30 +94,33 @@ export class SalaoDeJogosComponent implements OnInit, OnDestroy {
   }
 
   selecionarDia(dia: any) {
-    if (dia.dia && !dia.isAgendado) {
+    // **ALTERAÇÃO AQUI**: Impede o clique em dias agendados ou passados
+    if (dia.dia && !dia.isAgendado && !dia.isPassado) {
       this.selectedDate = dia.data;
     }
   }
 
+  // **NOVO MÉTODO**: Para navegar entre os meses
+  mudarMes(offset: number): void {
+    this.mesAtual.setMonth(this.mesAtual.getMonth() + offset);
+    this.mesAtual = new Date(this.mesAtual);
+    this.gerarCalendario();
+  }
+
   confirmarAgendamento() {
     if (this.selectedDate && this.selectedTime) {
-      // 3. Criamos o objeto e chamamos o serviço para salvar o novo agendamento
       const novoAgendamento = {
         local: this.localInfo.nome,
         data: this.selectedDate,
         horario: this.selectedTime
-        // Não precisamos mais passar o 'icone', o serviço faz isso sozinho!
       };
 
       this.agendamentoService.adicionarAgendamento(novoAgendamento);
 
-      // A lógica de notificação e redirecionamento continua a mesma
       this.userService.addNotification({
         title: 'Reserva Confirmada!',
         message: `A sua reserva para o ${this.localInfo.nome} no dia ${this.selectedDate.toLocaleDateString()} (${this.selectedTime}) foi efetuada.`
       });
-
-      // alert(`Agendamento para o ${this.localInfo.nome} confirmado com sucesso!`);
       
       this.router.navigate(['/meus-agendamentos']);
     }

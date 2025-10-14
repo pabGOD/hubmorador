@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../navbar/navbar';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
-// 1. Importar o serviço de agendamento e o Subscription
 import { AgendamentoService } from '../../services/agendamento.service';
 import { Subscription } from 'rxjs';
 
@@ -25,11 +24,9 @@ export class PiscinaComponent implements OnInit, OnDestroy {
   selectedDate: Date | null = null;
   selectedTime: string | null = '10:00 - 12:00';
 
-  // Esta lista agora será preenchida dinamicamente
   agendamentos: Date[] = [];
   private subscription: Subscription = new Subscription();
 
-  // 2. Injetar o AgendamentoService
   constructor(
     private userService: UserService, 
     private router: Router,
@@ -37,13 +34,12 @@ export class PiscinaComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Busca os agendamentos reais do serviço para popular o calendário
     this.subscription = this.agendamentoService.agendamentos$.subscribe(agendamentos => {
       this.agendamentos = agendamentos
         .filter(ag => ag.local === this.localInfo.nome && ag.status === 'ativo')
         .map(ag => new Date(ag.data));
       
-      this.gerarCalendario(); // Gera o calendário com os dias corretos já marcados
+      this.gerarCalendario();
     });
   }
 
@@ -64,11 +60,13 @@ export class PiscinaComponent implements OnInit, OnDestroy {
 
     for (let i = 1; i <= ultimoDiaDoMes; i++) {
       const data = new Date(ano, mes, i);
+      // **ALTERAÇÃO AQUI**: Adicionamos a verificação se o dia já passou
       this.diasDoMes.push({
         dia: i,
         data: data,
         isHoje: this.isHoje(data),
         isAgendado: this.isAgendado(data),
+        isPassado: this.isPassado(data) // Adicionamos esta nova propriedade
       });
     }
   }
@@ -78,6 +76,14 @@ export class PiscinaComponent implements OnInit, OnDestroy {
     return data.getDate() === hoje.getDate() &&
            data.getMonth() === hoje.getMonth() &&
            data.getFullYear() === hoje.getFullYear();
+  }
+  
+  // **NOVO MÉTODO**: Verifica se a data é anterior a hoje
+  isPassado(data: Date): boolean {
+    const hoje = new Date();
+    // Zera as horas para comparar apenas as datas
+    hoje.setHours(0, 0, 0, 0); 
+    return data < hoje;
   }
 
   isAgendado(data: Date): boolean {
@@ -89,19 +95,18 @@ export class PiscinaComponent implements OnInit, OnDestroy {
   }
 
   selecionarDia(dia: any) {
-    if (dia.dia && !dia.isAgendado) {
+    // **ALTERAÇÃO AQUI**: Impede o clique em dias agendados ou que já passaram
+    if (dia.dia && !dia.isAgendado && !dia.isPassado) {
       this.selectedDate = dia.data;
     }
   }
 
   confirmarAgendamento() {
     if (this.selectedDate && this.selectedTime) {
-      // 3. Criar o objeto para o serviço e chamar o método de adicionar
       const novoAgendamento = {
         local: this.localInfo.nome,
         data: this.selectedDate,
         horario: this.selectedTime
-        // O serviço adicionará o ícone automaticamente
       };
 
       this.agendamentoService.adicionarAgendamento(novoAgendamento);

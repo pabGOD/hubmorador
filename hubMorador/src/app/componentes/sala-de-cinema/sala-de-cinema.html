@@ -6,7 +6,10 @@
     <!-- Coluna da Esquerda: Calendário -->
     <div class="calendario-container">
       <div class="calendario-header">
+        <!-- **ALTERAÇÃO AQUI**: Adicionados botões de navegação -->
+        <button class="nav-btn" (click)="mudarMes(-1)">&lt;</button>
         <h2>{{ mesAtual | date:'MMMM yyyy' | titlecase }}</h2>
+        <button class="nav-btn" (click)="mudarMes(1)">&gt;</button>
       </div>
       <div class="calendario-grid">
         <div class="dia-semana">Dom</div>
@@ -24,6 +27,7 @@
             'outro-mes': dia.isOutroMes, 
             'hoje': dia.isHoje, 
             'agendado': dia.isAgendado,
+            'passado': dia.isPassado, 
             'selecionado': dia.data?.getTime() === selectedDate?.getTime()
           }"
           (click)="selecionarDia(dia)">

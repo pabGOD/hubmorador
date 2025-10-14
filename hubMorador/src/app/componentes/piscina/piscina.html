@@ -24,6 +24,7 @@
             'outro-mes': dia.isOutroMes, 
             'hoje': dia.isHoje, 
             'agendado': dia.isAgendado,
+            'passado': dia.isPassado, 
             'selecionado': dia.data?.getTime() === selectedDate?.getTime()
           }"
           (click)="selecionarDia(dia)">

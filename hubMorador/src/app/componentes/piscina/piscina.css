@@ -165,3 +165,19 @@
     padding-bottom: 2rem;
   }
 }
+/* Adicione este código ao seu arquivo piscina.css */
+
+.dia.passado {
+  color: #cccccc; /* Deixa o texto do dia cinza */
+  cursor: not-allowed; /* Mostra um ícone de "proibido" ao passar o mouse */
+  text-decoration: line-through; /* Tacha o número do dia */
+  pointer-events: none; /* Desabilita completamente eventos de clique */
+}
+
+/* Garante que o dia passado não tenha efeito hover */
+.dia.passado:hover {
+  background-color: transparent;
+  border-radius: 0;
+}
+
+

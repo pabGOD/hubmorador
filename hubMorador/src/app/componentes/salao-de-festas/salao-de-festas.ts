@@ -5,7 +5,7 @@ import { NavbarComponent } from '../navbar/navbar';
 import { UserService } from '../../services/user.service';
 import { AgendamentoService } from '../../services/agendamento.service';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs'; // 1. Importar o Subscription
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-salao-de-festas',
@@ -18,7 +18,6 @@ export class SalaoDeFestasComponent implements OnInit, OnDestroy {
   
   localInfo = {
     nome: 'Salão de Festas'
-    // 2. Removemos o 'icone' daqui, pois o serviço já sabe qual é.
   };
   
   mesAtual: Date = new Date();
@@ -26,7 +25,6 @@ export class SalaoDeFestasComponent implements OnInit, OnDestroy {
   selectedDate: Date | null = null;
   selectedTime: string = '19:00 - 23:00';
 
-  // Esta lista agora será preenchida dinamicamente pelo serviço
   agendamentos: Date[] = [];
   private subscription: Subscription = new Subscription();
 
@@ -37,18 +35,16 @@ export class SalaoDeFestasComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Carrega os agendamentos reais do serviço para popular o calendário
     this.subscription = this.agendamentoService.agendamentos$.subscribe(agendamentos => {
       this.agendamentos = agendamentos
         .filter(ag => ag.local === this.localInfo.nome && ag.status === 'ativo')
         .map(ag => new Date(ag.data));
       
-      this.gerarCalendario(); // Gera o calendário com os dias corretos já marcados
+      this.gerarCalendario();
     });
   }
 
   ngOnDestroy(): void {
-    // Evita vazamento de memória ao sair do componente
     this.subscription.unsubscribe();
   }
 
@@ -65,11 +61,13 @@ export class SalaoDeFestasComponent implements OnInit, OnDestroy {
 
     for (let i = 1; i <= ultimoDiaDoMes; i++) {
       const data = new Date(ano, mes, i);
+      // **ALTERAÇÃO AQUI**: Adicionada a verificação de data passada
       this.diasDoMes.push({
         dia: i,
         data: data,
         isHoje: this.isHoje(data),
         isAgendado: this.isAgendado(data),
+        isPassado: this.isPassado(data) // Nova propriedade
       });
     }
   }
@@ -81,6 +79,13 @@ export class SalaoDeFestasComponent implements OnInit, OnDestroy {
            data.getFullYear() === hoje.getFullYear();
   }
 
+  // **NOVO MÉTODO**: Verifica se a data é anterior a hoje
+  isPassado(data: Date): boolean {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    return data < hoje;
+  }
+
   isAgendado(data: Date): boolean {
     return this.agendamentos.some(ag => 
       ag.getDate() === data.getDate() &&
@@ -90,21 +95,27 @@ export class SalaoDeFestasComponent implements OnInit, OnDestroy {
   }
 
   selecionarDia(dia: any) {
-    if (dia.dia && !dia.isAgendado) {
+    // **ALTERAÇÃO AQUI**: Impede o clique em dias agendados ou passados
+    if (dia.dia && !dia.isAgendado && !dia.isPassado) {
       this.selectedDate = dia.data;
     }
   }
 
+  // **NOVO MÉTODO**: Para navegar entre os meses
+  mudarMes(offset: number): void {
+    this.mesAtual.setMonth(this.mesAtual.getMonth() + offset);
+    this.mesAtual = new Date(this.mesAtual);
+    this.gerarCalendario();
+  }
+
   confirmarAgendamento() {
     if (this.selectedDate && this.selectedTime) {
-      // 3. Criamos o objeto sem a propriedade 'icone'
       const novoAgendamento = {
         local: this.localInfo.nome,
         data: this.selectedDate,
         horario: this.selectedTime
       };
 
-      // O serviço se encarrega de adicionar o ícone correto
       this.agendamentoService.adicionarAgendamento(novoAgendamento);
 
       this.userService.addNotification({

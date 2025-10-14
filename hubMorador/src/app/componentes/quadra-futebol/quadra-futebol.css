@@ -202,4 +202,39 @@
     padding-bottom: 2rem;
   }
 }
+/* Estilos para desabilitar visualmente os dias que já passaram */
+.dia.passado {
+  color: #cccccc;
+  cursor: not-allowed;
+  text-decoration: line-through;
+  pointer-events: none; /* Previne qualquer interação com o mouse */
+}
+
+/* Garante que o dia passado não tenha efeito hover */
+.dia.passado:hover {
+  background-color: transparent;
+  border-radius: 0;
+}
+
+/* Estilos bônus para os botões de navegação do calendário */
+.calendario-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-btn {
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+}
+
+.nav-btn:hover {
+  background-color: #f0f0f0;
+}
 
